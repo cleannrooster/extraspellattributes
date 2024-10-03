@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "S": {
-      "item": "minecraft:scute"
+      "item": "minecraft:turtle_scute"
     },
     "I": {
       "item": "minecraft:iron_ingot"
@@ -13,7 +13,6 @@
     "SIS",
     "   "
   ],
-  "result": {
-    "item": "extraspellattributes:martialbracer"
+  "result":{ "id": "extraspellattributes:martialbracer"
   }
 }

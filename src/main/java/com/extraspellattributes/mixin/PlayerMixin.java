@@ -17,7 +17,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.spell_power.api.enchantment.Enchantments_SpellPower;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -73,7 +72,6 @@ public class PlayerMixin implements PlayerInterface, RecoupLivingEntityInterface
     public void setReabLasthurt(int lasthurt) {
         this.lastReabhurt = lasthurt;
 
-        this.setReabsorbing(false);
     }
 
 
@@ -83,11 +81,7 @@ public class PlayerMixin implements PlayerInterface, RecoupLivingEntityInterface
         PlayerEntity player = (PlayerEntity) (Object) this;
         if (!player.isInvulnerableTo(source) && amount > 0) {
             this.setReabLasthurt(player.age);
-            setReabsorbing(false);
-            if(player instanceof ServerPlayerEntity) {
-                ServerPlayNetworking.send((ServerPlayerEntity) player, new Identifier(ReabsorptionInit.MOD_ID, "reabstop"), PacketByteBufs.empty());
-                    ServerPlayNetworking.send((ServerPlayerEntity) player, new Identifier(ReabsorptionInit.MOD_ID, "lasthurt"), PacketByteBufs.empty());
-            }
+
             this.resetReabDamageAbsorbed();
         }
     }

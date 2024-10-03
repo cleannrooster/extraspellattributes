@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.spell_engine.api.spell.Spell;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -24,9 +25,9 @@ public class SpellStatusEffectInstance extends StatusEffectInstance {
     private boolean showIcon;
     @Nullable
     private StatusEffectInstance hiddenEffect;
-    public SpellStatusEffectInstance(SpellStatusEffect type, Spell spell, float spellPower, LivingEntity owner, int duration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon, @Nullable StatusEffectInstance hiddenEffect, Optional<FactorCalculationData> factorCalculationData) {
-        super(type,duration,amplifier,ambient,showParticles,showIcon,hiddenEffect,factorCalculationData);
-        this.spellEffect = type;
+    public SpellStatusEffectInstance(RegistryEntry<StatusEffect> type, Spell spell, float spellPower, LivingEntity owner, int duration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon, @Nullable StatusEffectInstance hiddenEffect) {
+        super(type,duration,amplifier,ambient,showParticles,showIcon,hiddenEffect);
+        this.spellEffect = (SpellStatusEffect)type.value();
         this.spell = spell;
         this.spellPower = spellPower;
         this.owner = owner;
@@ -45,6 +46,10 @@ public class SpellStatusEffectInstance extends StatusEffectInstance {
         return spell;
     }
 
+    public LivingEntity getOwner() {
+        return owner;
+    }
+
     public SpellStatusEffect getSpellEffect() {
         return spellEffect;
     }
@@ -54,11 +59,11 @@ public class SpellStatusEffectInstance extends StatusEffectInstance {
     }
 
     @Override
-    public void applyUpdateEffect(LivingEntity entity) {
+    public boolean update(LivingEntity entity,Runnable overwriteCallback) {
         if (this.isActive()) {
             this.spellEffect.applySpellEffect(entity, this.owner, this.amplifier, this.spellPower,this.spell);
         }
 
-        super.applyUpdateEffect(entity);
+        return super.update(entity,overwriteCallback);
     }
 }

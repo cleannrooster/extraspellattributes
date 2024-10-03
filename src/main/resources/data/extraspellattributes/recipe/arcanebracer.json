@@ -13,7 +13,6 @@
     "SLS",
     "   "
   ],
-  "result": {
-    "item": "extraspellattributes:arcanebracer"
+  "result":{ "id": "extraspellattributes:arcanebracer"
   }
 }

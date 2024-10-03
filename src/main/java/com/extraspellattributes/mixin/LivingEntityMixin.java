@@ -3,8 +3,11 @@ package com.extraspellattributes.mixin;
 import com.extraspellattributes.PlayerInterface;
 import com.extraspellattributes.ReabsorptionInit;
 import com.extraspellattributes.interfaces.RecoupLivingEntityInterface;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -74,9 +77,10 @@ public class LivingEntityMixin {
 				}
 			}
 		}
-		if(living.getAttributeInstance(DEFIANCE) != null) {
-			amount -= (float) Math.pow(living.getAttributeValue(DEFIANCE),0.5);
+		if(living.getAttributeInstance(DEFIANCE) != null && amount > 1) {
 
+			amount -= (float) Math.pow(living.getAttributeValue(DEFIANCE),0.5);
+			amount = Math.max(1,amount);
 		}
 		return amount;
 	}
@@ -90,61 +94,32 @@ public class LivingEntityMixin {
 
 		if (living instanceof PlayerInterface damageInterface && maximum > 0) {
 
-			if(!living.getWorld().getGameRules().getBoolean(CLASSIC_ENERGYSHIELD)) {
-				float additional = (float) (config.factor * 0.05 * maximum * (0.173287 * Math.pow(Math.E, -0.173287 * 0.05 * (living.age - damageInterface.getReabLasthurt()))));
-				if (damageInterface.getReabLasthurt() != 0 && living.age - damageInterface.getReabLasthurt() < 100 * 20 && damageInterface.getReabDamageAbsorbed() + additional <= maximum) {
-					damageInterface.ReababsorbDamage(additional);
-				}
-
-				if (living.age < 16 * 20 && damageInterface.getReabLasthurt() == 0 && damageInterface.getReabDamageAbsorbed() + additional <= maximum) {
-					damageInterface.ReababsorbDamage(additional);
-				}
-				if (damageInterface.getReabDamageAbsorbed() > living.getAbsorptionAmount()) {
-
-					if (!living.getWorld().isClient()) {
-					living.setAbsorptionAmount(damageInterface.getReabDamageAbsorbed());
-				}
-				}
-			}
-			else{
 				float additional = (float)maximum*0.25F*0.05F*config.factor;
 
 				if(living.age - damageInterface.getReabLasthurt() >= config.delay *20){
-					if(!damageInterface.getReabsorbing()) {
 
-						damageInterface.setReabsorbing(true);
-						if (living instanceof ServerPlayerEntity) {
-							ServerPlayNetworking.send((ServerPlayerEntity) living, new Identifier(ReabsorptionInit.MOD_ID, "reab"), PacketByteBufs.empty());
-						}
-					}
 					if(living.getAbsorptionAmount() < maximum) {
 						if (!living.getWorld().isClient()) {
 							living.setAbsorptionAmount((float) Math.min(living.getAbsorptionAmount() + additional, maximum));
 						}
 					}
 				}
-			}
 
 		}
+	}
+	@ModifyReturnValue(at = @At("TAIL"), method = "getMaxAbsorption")
+	public float getMaxReabsorption(float value) {
+		LivingEntity living = (LivingEntity) (Object) this;
+		double maximum = living.getAttributeValue(WARDING);
+
+
+		return (float) (value+maximum);
 	}
 	@Unique
 	private static final ThreadLocal<Boolean> PROCESSING = ThreadLocal.withInitial(() -> false);
 
-	@Inject(method = "onEquipStack", at = @At("HEAD"))
-	private void onEquipStackAbsorption(EquipmentSlot slot, ItemStack oldStack, ItemStack newStack, CallbackInfo ci) {
-		if (PROCESSING.get()) return;
-		PROCESSING.set(true);
-		try {
-			if (this instanceof PlayerInterface playerDamageInterface) {
-				if (!newStack.isEmpty() && newStack.getAttributeModifiers(slot).containsKey(WARDING)) {
-					playerDamageInterface.resetReabDamageAbsorbed();
-				}
-			}
-		} finally {
-			PROCESSING.set(false);
-		}
-	}
-	@Inject(at = @At("HEAD"), method = "Lnet/minecraft/entity/LivingEntity;sendEquipmentChanges(Ljava/util/Map;)V", cancellable = true)
+
+/*	@Inject(at = @At("HEAD"), method = "Lnet/minecraft/entity/LivingEntity;sendEquipmentChanges(Ljava/util/Map;)V", cancellable = true)
 	private void sendEquipmentChanges(Map<EquipmentSlot, ItemStack> equipmentChanges, CallbackInfo callbackInfo) {
 		LivingEntity living = (LivingEntity) (Object) this;
 		Map<EquipmentSlot, ItemStack> map = null;
@@ -154,30 +129,33 @@ public class LivingEntityMixin {
 		for(int var4 = 0; var4 < var3; ++var4) {
 			EquipmentSlot equipmentSlot = var2[var4];
 			ItemStack itemStack;
-			if(equipmentSlot.getType().equals(EquipmentSlot.Type.ARMOR)) {
+			if(equipmentSlot.getType().equals(EquipmentSlot.Type.HUMANOID_ARMOR)) {
 				itemStack = this.getSyncedArmorStack(equipmentSlot);
 
 				ItemStack itemStack2 = living.getEquippedStack(equipmentSlot);
 				if (living.areItemsDifferent(itemStack, itemStack2)) {
 					float toremove = 0;
-					Collection<EntityAttributeModifier> modifiers = itemStack.getAttributeModifiers(equipmentSlot).get(WARDING);
-					Collection<EntityAttributeModifier> modifiers2 = itemStack2.getAttributeModifiers(equipmentSlot).get(WARDING);
+					AttributeModifiersComponent attributeModifiersComponent = (AttributeModifiersComponent)itemStack.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT);
+					AttributeModifiersComponent attributeModifiersComponent2 = (AttributeModifiersComponent)itemStack2.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT);
 
-					for (EntityAttributeModifier modifier : modifiers) {
-						if (modifier.getOperation().equals(EntityAttributeModifier.Operation.ADDITION)) {
-							toremove -= modifier.getValue();
+					for (AttributeModifiersComponent.Entry modifier : attributeModifiersComponent.modifiers()) {
+						if(modifier.matches(RegistryEntry.of(WARDING),Identifier.of(MOD_ID,"warding")))
+						if (modifier.modifier().operation().equals(EntityAttributeModifier.Operation.ADD_VALUE)) {
+							toremove -= modifier.modifier().value();
 						}
 					}
-					for (EntityAttributeModifier modifier : modifiers2) {
-						if (modifier.getOperation().equals(EntityAttributeModifier.Operation.ADDITION)) {
-							toremove += modifier.getValue();
-						}
+					for (AttributeModifiersComponent.Entry modifier : attributeModifiersComponent2.modifiers()) {
+						if(modifier.matches(RegistryEntry.of(WARDING),Identifier.of(MOD_ID,"warding")))
+							if (modifier.modifier().operation().equals(EntityAttributeModifier.Operation.ADD_VALUE)) {
+								toremove -= modifier.modifier().value();
+							}
 					}
-					Collection<EntityAttributeModifier> modifiers3 = living.getAttributeInstance(WARDING).getModifiers(EntityAttributeModifier.Operation.MULTIPLY_BASE);
-					Collection<EntityAttributeModifier> modifiers4 = living.getAttributeInstance(WARDING).getModifiers(EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+					Collection<EntityAttributeModifier> modifiers3 = living.getAttributeInstance(RegistryEntry.of(WARDING)).getModifiers();
+					Collection<EntityAttributeModifier> modifiers4 = living.getAttributeInstance(RegistryEntry.of(WARDING)).getModifiers();
+
 					float mult = 1;
 					for (EntityAttributeModifier modifier : modifiers3) {
-						mult += modifier.getValue();
+						mult += modifier.value();
 					}
 					toremove *= mult;
 					for (EntityAttributeModifier modifier : modifiers4) {
@@ -193,7 +171,7 @@ public class LivingEntityMixin {
 				}
 			}
 		}
-	}
+	}*/
 	@Inject(method = "createLivingAttributes", at = @At("RETURN"))
 	private static void addAttributesextraspellattributes_RETURN(final CallbackInfoReturnable<DefaultAttributeContainer.Builder> info) {
 		info.getReturnValue().add(WARDING);
@@ -207,9 +185,7 @@ public class LivingEntityMixin {
 		info.getReturnValue().add(GLANCINGBLOW);
 		info.getReturnValue().add(SPELLSUPPRESS);
 		info.getReturnValue().add(ACRO);
-		info.getReturnValue().add(ENDURANCE);
 		info.getReturnValue().add(DEFIANCE);
 		info.getReturnValue().add(RECOUP);
-
 	}
 }

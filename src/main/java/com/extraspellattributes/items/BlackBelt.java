@@ -8,6 +8,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.Identifier;
 
 import java.util.UUID;
 
@@ -20,10 +22,10 @@ public class BlackBelt extends TrinketItem {
 
 
 
-    public Multimap<EntityAttribute, EntityAttributeModifier> getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, UUID uuid) {
+    public Multimap<RegistryEntry<EntityAttribute>, EntityAttributeModifier>  getModifiers(ItemStack stack, SlotReference slot, LivingEntity entity, Identifier uuid) {
         var modifiers = super.getModifiers(stack, slot, entity, uuid);
         // +10% movement speed
-        modifiers.put(ReabsorptionInit.DEFIANCE, new EntityAttributeModifier(uuid, "extraspellattributes:extraspellattributes", value, EntityAttributeModifier.Operation.ADDITION));
+        modifiers.put(ReabsorptionInit.DEFIANCE, new EntityAttributeModifier(uuid,  value, EntityAttributeModifier.Operation.ADD_VALUE));
         // If the player has access to ring slots, this will give them an extra one
         return modifiers;
     }

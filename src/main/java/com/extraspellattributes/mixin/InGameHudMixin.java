@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
 public class InGameHudMixin {
-    private static final Identifier ICON = new Identifier(ReabsorptionInit.MOD_ID,"textures/gui/gui.png");
+   /* private static final Identifier ICON = Identifier.of(ReabsorptionInit.MOD_ID,"textures/gui/gui.png");
     @Shadow
     private int scaledWidth;
     @Shadow
@@ -26,8 +26,8 @@ public class InGameHudMixin {
     @Shadow
     private int renderHealthValue;
     @Shadow
-    private int ticks;
-    @Inject(method = "drawHeart", at = @At("HEAD"), cancellable = true)
+    private int ticks;*/
+ /*   @Inject(method = "drawHeart", at = @At("HEAD"), cancellable = true)
     private  void drawheartCleann(DrawContext context, InGameHud.HeartType type, int x, int y, int v, boolean blinking, boolean halfHeart, CallbackInfo info) {
         MinecraftClient client = MinecraftClient.getInstance();
         if(client.player != null) {
@@ -40,5 +40,5 @@ public class InGameHudMixin {
                 }
 
         }
-    }
+    }*/
 }

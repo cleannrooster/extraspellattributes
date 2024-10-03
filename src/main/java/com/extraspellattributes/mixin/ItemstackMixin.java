@@ -7,7 +7,6 @@ import dev.emi.trinkets.api.SlotGroup;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -15,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
@@ -34,35 +34,10 @@ import java.util.Map;
 public class ItemstackMixin {
 
     @ModifyReturnValue(at = @At("TAIL"), method = "getTooltip")
-    public List<Text> getTooltipextraspellattributes(List<Text> tooltip, @Nullable PlayerEntity player, TooltipContext context) {
-        if(tooltip.stream().anyMatch(text -> text.toString().contains("extraspellattributes.defi")) ||
-                tooltip.stream().anyMatch(text -> text.toString().contains("extraspellattributes.glancingblow")) ||
-                tooltip.stream().anyMatch(text -> text.toString().contains("extraspellattributes.serenity")) ||
-                tooltip.stream().anyMatch(text -> text.toString().contains("extraspellattributes.spellsuppression")) ||
-                tooltip.stream().anyMatch(text -> text.toString().contains("extraspellattributes.determination")) ||
-                tooltip.stream().anyMatch(text -> text.toString().contains("extraspellattributes.reabsorption"))) {
-            if (tooltip.stream().anyMatch(text -> text.toString().contains("extraspellattributes.defi"))) {
-                tooltip.add(Text.translatable("desc.extraspellattributes.defi").formatted(Formatting.GRAY));
-            }
-            if (tooltip.stream().anyMatch(text -> text.toString().contains("extraspellattributes.glancingblow"))) {
-                tooltip.add(Text.translatable("desc.extraspellattributes.glance").formatted(Formatting.GRAY));
-            }
-            if (tooltip.stream().anyMatch(text -> text.toString().contains("extraspellattributes.serenity"))) {
-                tooltip.add(Text.translatable("desc.extraspellattributes.acro").formatted(Formatting.GRAY));
+    public List<Text> getTooltipextraspellattributes(List<Text> tooltip,Item.TooltipContext context, @Nullable PlayerEntity player, TooltipType type) {
+        if (tooltip.stream().anyMatch(text -> text.toString().contains("extraspellattributes.reabsorption"))) {
+            tooltip.add(Text.translatable("desc.extraspellattributes.reabsorption").formatted(Formatting.GRAY));
 
-            }
-            if (tooltip.stream().anyMatch(text -> text.toString().contains("extraspellattributes.spellsuppression"))) {
-                tooltip.add(Text.translatable("desc.extraspellattributes.supp").formatted(Formatting.GRAY));
-
-            }
-            if (tooltip.stream().anyMatch(text -> text.toString().contains("extraspellattributes.determination"))) {
-                tooltip.add(Text.translatable("desc.extraspellattributes.determination").formatted(Formatting.GRAY));
-
-            }
-            if (tooltip.stream().anyMatch(text -> text.toString().contains("extraspellattributes.reabsorption"))) {
-                tooltip.add(Text.translatable("desc.extraspellattributes.reabsorption").formatted(Formatting.GRAY));
-
-            }
         }
         return tooltip;
 

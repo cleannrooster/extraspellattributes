@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "extraspellattributes:defiance",
+    "extraspellattributes:glancingblow",
+    "extraspellattributes:recoup",
+    "extraspellattributes:spellbreak",
+    "extraspellattributes:suppression",
+    "extraspellattributes:warding"
+  ]
+}

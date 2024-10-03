@@ -2,10 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "S": {
-      "item": "minecraft:ghast_tear"
+      "item": "minecraft:amethyst_shard"
     },
     "L": {
-      "item": "minecraft:gold_ingot"
+      "item": "minecraft:gold_nugget"
     },
     "A": {
       "item": "minecraft:totem_of_undying"
@@ -14,9 +14,8 @@
   "pattern": [
     "LLL",
     "LSL",
-    " A "
+    "SAS"
   ],
-  "result": {
-    "item": "extraspellattributes:undyingsoul"
+  "result":{ "id":"extraspellattributes:nonbelieversamulet"
   }
 }
