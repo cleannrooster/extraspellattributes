@@ -26,7 +26,7 @@ public class SpellStatusEffectInstance extends StatusEffectInstance {
     @Nullable
     private StatusEffectInstance hiddenEffect;
     public SpellStatusEffectInstance(RegistryEntry<StatusEffect> type, Spell spell, float spellPower, LivingEntity owner, int duration, int amplifier, boolean ambient, boolean showParticles, boolean showIcon, @Nullable StatusEffectInstance hiddenEffect) {
-        super(type,duration,amplifier,ambient,showParticles,showIcon,hiddenEffect);
+        super(type,duration,amplifier,ambient,showParticles,showIcon);
         this.spellEffect = (SpellStatusEffect)type.value();
         this.spell = spell;
         this.spellPower = spellPower;
@@ -60,7 +60,9 @@ public class SpellStatusEffectInstance extends StatusEffectInstance {
 
     @Override
     public boolean update(LivingEntity entity,Runnable overwriteCallback) {
+
         if (this.isActive()) {
+
             this.spellEffect.applySpellEffect(entity, this.owner, this.amplifier, this.spellPower,this.spell);
         }
 

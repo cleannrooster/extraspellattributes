@@ -17,6 +17,7 @@ public class ServerConfig  implements ConfigData {
     public boolean turtle_bracer = true;
     @Comment("Mod of turtle bracer")
     public float turtle_bracer_mod = 0.3F;
+
     @Comment("Registration of turtle girdle")
     public boolean turtle_girdle = true;
 

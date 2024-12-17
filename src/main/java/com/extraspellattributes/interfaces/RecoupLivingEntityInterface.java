@@ -1,11 +1,15 @@
 package com.extraspellattributes.interfaces;
 
-import com.extraspellattributes.api.RecoupInstance;
+import com.extraspellattributes.api.RecoupInstances;
 
 import java.util.List;
 
 public interface RecoupLivingEntityInterface {
-    List<RecoupInstance> getRecoups();
+    List<RecoupInstances.RecoupInstanceHealth> getRecoupsHealth();
+    List<RecoupInstances.RecoupInstanceAbsorption> getRecoupsAbsorption();
+
     void tickRecoups();
-    void addRecoup(RecoupInstance instance);
+    void addRecoupHealth(RecoupInstances.RecoupInstanceHealth instance);
+    void addRecoupAbsorption(RecoupInstances.RecoupInstanceAbsorption instance);
+
 }

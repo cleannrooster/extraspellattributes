@@ -1,14 +1,18 @@
 package com.extraspellattributes;
 
+import com.extraspellattributes.api.Sign;
+import com.extraspellattributes.api.Signed;
 import com.extraspellattributes.config.ServerConfig;
 import com.extraspellattributes.config.ServerConfigWrapper;
 import com.extraspellattributes.items.ItemInit;
+import com.extraspellattributes.mixin.EntityAttributeInstanceInvoker;
 import com.extraspellattributes.trades.CustomTrades;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
@@ -19,10 +23,8 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelBasedValue;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.effect.AttributeEnchantmentEffect;
-import net.minecraft.entity.attribute.ClampedEntityAttribute;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.attribute.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
@@ -30,6 +32,9 @@ import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.provider.number.BinomialLootNumberProvider;
 import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import net.spell_engine.api.spell.ExternalSpellSchools;
@@ -65,12 +70,46 @@ public class ReabsorptionInit implements ModInitializer {
 	public static RegistryEntry<EntityAttribute> ACRO;
 	public static RegistryEntry<EntityAttribute> DEFIANCE ;
 	public static RegistryEntry<EntityAttribute> RECOUP;
+	public static RegistryEntry<EntityAttribute> RECOUPABSORB;
+	public static RegistryEntry<EntityAttribute> REABSORBARMORMAX;
+
+	public static RegistryEntry<EntityAttribute> IMBALANCEDGUARD;
+	public static RegistryEntry<EntityAttribute> MAGEBANE;
+	public static RegistryEntry<EntityAttribute> BLUR;
+	public static RegistryEntry<EntityAttribute> BRITTLE;
+	public static RegistryEntry<EntityAttribute> CULL;
+
+
 	public static final GameRules.Key<GameRules.BooleanRule> CLASSIC_ENERGYSHIELD = GameRuleRegistry.register("classicEnergyShield", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
 	static{
 
 	}
 	@Override
 	public void onInitialize() {
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(CommandManager.literal("extraSpellAttributes").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+				.executes((ctx) -> {
+
+					PlayerEntity player = (((ServerCommandSource)ctx.getSource()).getPlayer());
+					player.sendMessage(Text.of("converttofrost: "+String.valueOf(Calculations.converttoFrost(player))),false);
+					player.sendMessage(Text.of("converttofire: "+String.valueOf(Calculations.converttoFire(player))),false);
+					player.sendMessage(Text.of("converttoarcane: "+String.valueOf(Calculations.converttoArcane(player))),false);
+					player.sendMessage(Text.of("converttoheal: "+String.valueOf(Calculations.converttoHeal(player))),false);
+					player.sendMessage(Text.of("glancingblow: "+String.valueOf(Calculations.glancingBlow(player))),false);
+					player.sendMessage(Text.of("spellsuppress: "+String.valueOf(Calculations.spellSuppress(player))),false);
+					player.sendMessage(Text.of("defiance: "+String.valueOf(Calculations.defiance(player))),false);
+					player.sendMessage(Text.of("spellbreak: "+String.valueOf(Calculations.spellbreak(player))),false);
+					player.sendMessage(Text.of("recoup: "+String.valueOf(Calculations.recoup(player))),false);
+					player.sendMessage(Text.of("recoup_reabsorb: "+String.valueOf(Calculations.recoup_reabsorb(player))),false);
+					player.sendMessage(Text.of("reabsorbarmormax: "+String.valueOf(Calculations.reabsorbarmormax(player))),false);
+					player.sendMessage(Text.of("imbalanced: "+String.valueOf(Calculations.imbalanced(player))),false);
+					player.sendMessage(Text.of("magebane: "+String.valueOf(Calculations.magebane(player))),false);
+					player.sendMessage(Text.of("blur: "+String.valueOf(Calculations.blur(player))),false);
+					player.sendMessage(Text.of("brittle: "+String.valueOf(Calculations.brittle(player))),false);
+					player.sendMessage(Text.of("cull: "+String.valueOf(Calculations.cull(player))),false);
+
+					return 1;
+
+				})));
 
 		AutoConfig.register(ServerConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
 		config = AutoConfig.getConfigHolder(ServerConfigWrapper.class).getConfig().server;
@@ -109,27 +148,92 @@ public class ReabsorptionInit implements ModInitializer {
 		});		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-		((ClampedEntityAttribute)(CONVERTTOFROST.value())).setTracked(true);
-		((ClampedEntityAttribute)(CONVERTTOFIRE.value())).setTracked(true);
-		((ClampedEntityAttribute)(CONVERTTOARCANE.value())).setTracked(true);
-		((ClampedEntityAttribute)(CONVERTTOHEAL.value())).setTracked(true);
-		((ClampedEntityAttribute)(CONVERTFROMARCANE.value())).setTracked(true);
-		((ClampedEntityAttribute)(CONVERTFROMFROST.value())).setTracked(true);
-		((ClampedEntityAttribute)(CONVERTFROMFIRE.value())).setTracked(true);
-		((ClampedEntityAttribute)(WARDING.value())).setTracked(true);
+		((CONVERTTOFROST.value())).setTracked(true);
+		((CONVERTTOFIRE.value())).setTracked(true);
+		((CONVERTTOARCANE.value())).setTracked(true);
+		((CONVERTTOHEAL.value())).setTracked(true);
+		((CONVERTFROMARCANE.value())).setTracked(true);
+		((CONVERTFROMFROST.value())).setTracked(true);
+		((CONVERTFROMFIRE.value())).setTracked(true);
+		((WARDING.value())).setTracked(true);
+		((RECOUP.value())).setTracked(true);
+
+		((RECOUPABSORB.value())).setTracked(true);
+		((REABSORBARMORMAX.value())).setTracked(true);
+		((IMBALANCEDGUARD.value())).setTracked(true);
+		((MAGEBANE.value())).setTracked(true);
+		((BRITTLE.value())).setTracked(true);
+		((BLUR.value())).setTracked(true);
+		((CULL.value())).setTracked(true);
+
 		SpellSchools.FROST.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
-			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*0.01*(queryArgs.entity().getAttributeValue(CONVERTTOFROST)-100);
+			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*Math.min(1, Calculations.converttoFrost(queryArgs.entity()));
 		});
 		SpellSchools.FIRE.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
-			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*0.01*(queryArgs.entity().getAttributeValue(CONVERTTOFIRE)-100);
-		});
+			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*Calculations.converttoFire(queryArgs.entity());});
 		SpellSchools.ARCANE.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
-			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*0.01*(queryArgs.entity().getAttributeValue(CONVERTTOARCANE)-100);
-		});
+			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*Calculations.converttoArcane(queryArgs.entity());});
 		SpellSchools.HEALING.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
-			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*0.01*(queryArgs.entity().getAttributeValue(CONVERTTOHEAL)-100);
-		});
+			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*Calculations.converttoHeal(queryArgs.entity());});
 		LOGGER.info("Hello Fabric world!");
 
 	}
+	//Code Credit to Pufferfish
+	@SafeVarargs
+	public static double applyAttributeModifiers(
+			double initial,
+			Signed<EntityAttributeInstance>... attributes
+	) {
+		for (var signedAttribute : attributes) {
+			if (signedAttribute.value() == null) {
+				continue;
+			}
+			for (var modifier : ((EntityAttributeInstanceInvoker) signedAttribute.value())
+					.invokeGetModifiersByOperation(EntityAttributeModifier.Operation.ADD_VALUE)
+			) {
+				switch (signedAttribute.sign()) {
+					case POSITIVE -> initial += modifier.value();
+					case NEGATIVE -> initial -= modifier.value();
+					default -> throw new IllegalStateException();
+				}
+			}
+		}
+		double result = initial;
+		for (var signedAttribute : attributes) {
+			if (signedAttribute.value() == null) {
+				continue;
+			}
+			for (var modifier : ((EntityAttributeInstanceInvoker) signedAttribute.value())
+					.invokeGetModifiersByOperation(EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE)
+			) {
+				switch (signedAttribute.sign()) {
+					case POSITIVE -> result += initial * modifier.value();
+					case NEGATIVE -> result -= initial * modifier.value();
+					default -> throw new IllegalStateException();
+				}
+			}
+		}
+		for (var signedAttribute : attributes) {
+			if (signedAttribute.value() == null) {
+				continue;
+			}
+			for (var modifier : ((EntityAttributeInstanceInvoker) signedAttribute.value())
+					.invokeGetModifiersByOperation(EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+			) {
+				switch (signedAttribute.sign()) {
+					case POSITIVE -> result *= 1.0 + modifier.value();
+					case NEGATIVE -> result *= 1.0 - modifier.value();
+					default -> throw new IllegalStateException();
+				}
+			}
+		}
+		for (var signedAttribute : attributes) {
+			if (signedAttribute.value() == null) {
+				continue;
+			}
+			result = signedAttribute.value().getAttribute().value().clamp(result);
+		}
+		return result;
+	}
+
 }

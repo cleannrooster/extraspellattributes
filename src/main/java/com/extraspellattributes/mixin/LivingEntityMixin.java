@@ -1,17 +1,22 @@
 package com.extraspellattributes.mixin;
 
+import com.extraspellattributes.Calculations;
 import com.extraspellattributes.PlayerInterface;
 import com.extraspellattributes.ReabsorptionInit;
+import com.extraspellattributes.api.RecoupInstances;
+import com.extraspellattributes.api.Sign;
 import com.extraspellattributes.interfaces.RecoupLivingEntityInterface;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifiersComponent;
+import net.minecraft.entity.DamageUtil;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.damage.DamageTypes;
@@ -20,6 +25,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -52,26 +58,46 @@ public class LivingEntityMixin {
 	private ItemStack getSyncedArmorStack(EquipmentSlot slot) {
 		return (ItemStack)this.syncedArmorStacks.get(slot.getEntitySlotId());
 	}
+
 	@ModifyVariable(at = @At("HEAD"), method = "damage", argsOnly = true)
 	private float damageHeadReab(float amount, DamageSource source, float originalAmount){
 		LivingEntity living = (LivingEntity) (Object) this;
+
 		amount = originalAmount;
+		if(applyAttributeModifiers(1, Sign.POSITIVE.wrap(living.getAttributeInstance(BLUR)))-1 > 0){
+			amount *= (float) (Calculations.blur(living));
+			if(Calculations.blur(living)-1 < living.getRandom().nextFloat()){
+				amount = 0;
+			}
+		}
+		if(living.age - living.getLastAttackedTime() > 80 || living.age - living.getLastAttackedTime()  < 80) {
+			if (living.getAttributeValue(BRITTLE) > 100) {
+				amount *= (float)Calculations.brittlenegative(living);
+			}
+		}
+		else{
+			if (living.getAttributeValue(BRITTLE) > 100) {
+				amount *= (float) (Calculations.brittle(living));
+
+			}
+		}
 		if(living.getAttributeInstance(GLANCINGBLOW) != null && source.getAttacker() != null){
-			double glancingchance = 0.01*(living.getAttributeValue(GLANCINGBLOW)-100);
+			double glancingchance = Calculations.glancingBlow(living)-1;
 			if (living.getRandom().nextFloat() < glancingchance) {
-				amount *= 0.65;
+				amount *= 0.65F;
 			}
 
 
 		}
+
 		Registry<DamageType> registry = ((DamageSourcesAccessor)living.getDamageSources()).getRegistry();
 
 		if(living.getAttributeInstance(SPELLSUPPRESS) != null && source.getType().equals(registry.entryOf(DamageTypes.MAGIC).value()) || source.getType().equals(registry.entryOf(DamageTypes.INDIRECT_MAGIC).value())){
-			double suppresschance = 0.01*(living.getAttributeValue(SPELLSUPPRESS)-100);
+			double suppresschance = Calculations.spellSuppress(living)-1;
 
 			if(living.getRandom().nextFloat() < suppresschance){
-				amount *= 0.5;
-				double acro = 0.01 * (living.getAttributeValue(ACRO) - 100);
+				amount *= 0.5F;
+				double acro = Calculations.spellbreak(living)-1;
 				if (living.getRandom().nextFloat() <  acro) {
 					amount *= 0;
 				}
@@ -79,7 +105,7 @@ public class LivingEntityMixin {
 		}
 		if(living.getAttributeInstance(DEFIANCE) != null && amount > 1) {
 
-			amount -= (float) Math.pow(living.getAttributeValue(DEFIANCE),0.5);
+			amount -= (float) Math.pow(Calculations.defiance(living),0.5);
 			amount = Math.max(1,amount);
 		}
 		return amount;
@@ -111,9 +137,35 @@ public class LivingEntityMixin {
 	public float getMaxReabsorption(float value) {
 		LivingEntity living = (LivingEntity) (Object) this;
 		double maximum = living.getAttributeValue(WARDING);
-
+		if(Calculations.reabsorbarmormax(living) > 0){
+			return (float) Math.min(value+maximum,(float) (living.getAttributeValue(REABSORBARMORMAX)*living.getArmor()));
+		}
 
 		return (float) (value+maximum);
+	}
+	@ModifyReturnValue(at = @At("TAIL"), method = "applyArmorToDamage")
+
+	protected float applyArmorToDamageReab(float value, DamageSource source, float amount) {
+		LivingEntity living = (LivingEntity) (Object) this;
+		double imbalanced = Calculations.imbalanced(living);
+		double magebane = Calculations.magebane(living);
+
+		if(magebane > 1){
+
+			if(source.getTypeRegistryEntry().getIdAsString().contains("spell_power")){
+			living.damageArmor(source, value);
+				value = DamageUtil.getDamageLeft(living, value, source, (float)living.getArmor(), (float)living.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS));
+			}
+			value *= 1.2F;
+		}
+		if(imbalanced > 1){
+			if (!source.isIn(DamageTypeTags.BYPASSES_ARMOR)) {
+				living.damageArmor(source, amount);
+				value *= 3;
+				value = DamageUtil.getDamageLeft(living, value, source, (float) living.getArmor(), (float) living.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS));
+			}
+		}
+		return value;
 	}
 	@Unique
 	private static final ThreadLocal<Boolean> PROCESSING = ThreadLocal.withInitial(() -> false);
@@ -187,5 +239,13 @@ public class LivingEntityMixin {
 		info.getReturnValue().add(ACRO);
 		info.getReturnValue().add(DEFIANCE);
 		info.getReturnValue().add(RECOUP);
+		info.getReturnValue().add(RECOUPABSORB);
+		info.getReturnValue().add(REABSORBARMORMAX);
+		info.getReturnValue().add(IMBALANCEDGUARD);
+		info.getReturnValue().add(MAGEBANE);
+		info.getReturnValue().add(BLUR);
+		info.getReturnValue().add(BRITTLE);
+		info.getReturnValue().add(CULL);
+
 	}
 }

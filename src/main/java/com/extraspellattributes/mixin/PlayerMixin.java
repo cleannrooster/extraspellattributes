@@ -3,7 +3,7 @@ package com.extraspellattributes.mixin;
 
 import com.extraspellattributes.PlayerInterface;
 import com.extraspellattributes.ReabsorptionInit;
-import com.extraspellattributes.api.RecoupInstance;
+import com.extraspellattributes.api.RecoupInstances;
 import com.extraspellattributes.interfaces.RecoupLivingEntityInterface;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -37,7 +37,8 @@ public class PlayerMixin implements PlayerInterface, RecoupLivingEntityInterface
     public int lastReabhurt = 0;
     public float damageReabAbsorbed;
     public boolean reabsorbing = false;
-    public List<RecoupInstance> recoupInstances = new ArrayList<RecoupInstance>(List.of());
+    public List<RecoupInstances.RecoupInstanceHealth> recoupInstancesHealth = new ArrayList<RecoupInstances.RecoupInstanceHealth>(List.of());
+    public List<RecoupInstances.RecoupInstanceAbsorption> recoupInstancesAbsorption = new ArrayList<RecoupInstances.RecoupInstanceAbsorption>(List.of());
 
     public int getReabLasthurt() {
         return lastReabhurt;
@@ -88,23 +89,39 @@ public class PlayerMixin implements PlayerInterface, RecoupLivingEntityInterface
 
 
     @Override
-    public List<RecoupInstance> getRecoups() {
-        return this.recoupInstances;
+    public List<RecoupInstances.RecoupInstanceHealth> getRecoupsHealth() {
+        return this.recoupInstancesHealth;
+    }
+
+    @Override
+    public List<RecoupInstances.RecoupInstanceAbsorption> getRecoupsAbsorption() {
+        return recoupInstancesAbsorption;
     }
 
 
     @Override
     public void tickRecoups() {
-        for(RecoupInstance instance : this.recoupInstances){
+        for(RecoupInstances.RecoupInstanceHealth instance : this.recoupInstancesHealth){
             instance.tick();
         }
-        if(!this.recoupInstances.isEmpty()) {
-            this.recoupInstances.removeIf(recoupInstance -> recoupInstance.remainingduration <= 0);
+        for(RecoupInstances.RecoupInstanceAbsorption instance : this.recoupInstancesAbsorption){
+            instance.tick();
+        }
+        if(!this.recoupInstancesHealth.isEmpty()) {
+            this.recoupInstancesHealth.removeIf(recoupInstance -> recoupInstance.remainingduration <= 0);
+        }
+        if(!this.recoupInstancesAbsorption.isEmpty()) {
+            this.recoupInstancesAbsorption.removeIf(recoupInstance -> recoupInstance.remainingduration <= 0);
         }
     }
 
     @Override
-    public void addRecoup(RecoupInstance instance) {
-        this.recoupInstances.add(instance);
+    public void addRecoupHealth(RecoupInstances.RecoupInstanceHealth instance) {
+        this.recoupInstancesHealth.add(instance);
+    }
+
+    @Override
+    public void addRecoupAbsorption(RecoupInstances.RecoupInstanceAbsorption instance) {
+        this.recoupInstancesAbsorption.add(instance);
     }
 }

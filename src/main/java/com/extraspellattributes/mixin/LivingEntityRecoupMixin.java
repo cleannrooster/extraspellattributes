@@ -1,7 +1,8 @@
 package com.extraspellattributes.mixin;
 
 import com.extraspellattributes.PlayerInterface;
-import com.extraspellattributes.api.RecoupInstance;
+import com.extraspellattributes.api.RecoupInstances;
+import com.extraspellattributes.api.Sign;
 import com.extraspellattributes.interfaces.RecoupLivingEntityInterface;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EquipmentSlot;
@@ -17,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.spell_power.mixin.DamageSourcesAccessor;
@@ -34,16 +36,19 @@ import java.util.Map;
 import static com.extraspellattributes.ReabsorptionInit.*;
 
 @Mixin(value = DamageTracker.class, priority = 9999)
-public class LivingEntityRecoupMixin {
+public class LivingEntityRecoupMixin  {
 	@Shadow
 	private  LivingEntity entity;
+
 
 	@Inject(at = @At("HEAD"), method = "onDamage", cancellable = true)
 	public  void damageRecoup(DamageSource source, float amount, CallbackInfo info) {
 		LivingEntity living = (LivingEntity) entity;
 		if(living instanceof RecoupLivingEntityInterface recoupLivingEntityInterface && living instanceof PlayerEntity player && player.getAttributeValue(RECOUP) > 100){
-			recoupLivingEntityInterface.addRecoup(new RecoupInstance(player, 80, amount*0.01*(player.getAttributeValue(RECOUP)-100)));
+			recoupLivingEntityInterface.addRecoupHealth(new RecoupInstances.RecoupInstanceHealth(player, 80, amount*(-1+applyAttributeModifiers(1, Sign.POSITIVE.wrap(player.getAttributeInstance(RECOUP))))));
 		}
+
 	}
+
 
 }

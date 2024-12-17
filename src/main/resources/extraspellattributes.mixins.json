@@ -8,8 +8,11 @@
 		"AttributeMixin",
 		"ItemstackMixin",
 		"LivingEntityRecoupMixin",
-		"EntityAttributesMixin"
-
+		"EntityAttributesMixin",
+		"LivingEntityRecoupAbsorbMixin",
+		"LivingEntityCullMixin",
+		"EntityAttributeInstanceMixin",
+		"EntityAttributeInstanceInvoker"
 	],
 	"client": [
 		"InGameHudMixin"

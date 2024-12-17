@@ -1,5 +1,6 @@
 package com.extraspellattributes.mixin;
 
+import com.extraspellattributes.DynamicAttribute;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.registry.Registries;
@@ -17,18 +18,25 @@ public class EntityAttributesMixin {
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void static_tail_Cleann(CallbackInfo ci) {
         WARDING = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "reabsorption"), new ClampedEntityAttribute("attribute.name.extraspellattributes.reabsorption", 0,0,9999));
-        CONVERTFROMFIRE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "convertfromfire"),new ClampedEntityAttribute("attribute.name.extraspellattributes.convertfromfire", 100,100,9999));
-        CONVERTFROMFROST = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "convertfromfrost"),new ClampedEntityAttribute("attribute.name.extraspellattributes.convertfromfrost", 100,100,9999));
-        CONVERTFROMARCANE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "convertfromarcane"),new ClampedEntityAttribute("attribute.name.extraspellattributes.convertfromarcane", 100,100,9999));
-        CONVERTTOFIRE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "converttofire"),new  ClampedEntityAttribute("attribute.name.extraspellattributes.converttofire", 100,100,9999));
-        CONVERTTOFROST = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "converttofrost"),new ClampedEntityAttribute("attribute.name.extraspellattributes.converttofrost", 100,100,9999));
-        CONVERTTOARCANE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "converttoarcane"), new ClampedEntityAttribute("attribute.name.extraspellattributes.converttoarcane", 100,100,9999));
-        CONVERTTOHEAL = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "converttoheal"), new ClampedEntityAttribute("attribute.name.extraspellattributes.converttoheal", 100,100,9999));
-        GLANCINGBLOW = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "glancingblow"), new ClampedEntityAttribute("attribute.name.extraspellattributes.glancingblow", 100,100,200));
-        SPELLSUPPRESS = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "spellsuppression"), new ClampedEntityAttribute("attribute.name.extraspellattributes.spellsuppression", 100,100,200));
-        ACRO = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"serenity"), new ClampedEntityAttribute("attribute.name.extraspellattributes.serenity", 100,100,175));
+        CONVERTFROMFIRE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "convertfromfire"),new DynamicAttribute("attribute.name.extraspellattributes.convertfromfire"));
+        CONVERTFROMFROST = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "convertfromfrost"),new DynamicAttribute("attribute.name.extraspellattributes.convertfromfrost"));
+        CONVERTFROMARCANE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "convertfromarcane"),new DynamicAttribute("attribute.name.extraspellattributes.convertfromarcane"));
+        CONVERTTOFIRE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "converttofire"),new DynamicAttribute("attribute.name.extraspellattributes.converttofire"));
+        CONVERTTOFROST = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "converttofrost"),new DynamicAttribute("attribute.name.extraspellattributes.converttofrost"));
+        CONVERTTOARCANE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "converttoarcane"), new DynamicAttribute("attribute.name.extraspellattributes.converttoarcane"));
+        CONVERTTOHEAL = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "converttoheal"), new DynamicAttribute("attribute.name.extraspellattributes.converttoheal"));
+        GLANCINGBLOW = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "glancingblow"), new DynamicAttribute("attribute.name.extraspellattributes.glancingblow"));
+        SPELLSUPPRESS = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "spellsuppression"), new DynamicAttribute(("attribute.name.extraspellattributes.spellsuppression")));
+        ACRO = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"serenity"), new DynamicAttribute(("attribute.name.extraspellattributes.serenity")));
         DEFIANCE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"defiance"),new ClampedEntityAttribute("attribute.name.extraspellattributes.defi", 0,0,999));
-        RECOUP = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"recoup"),new ClampedEntityAttribute("attribute.name.extraspellattributes.determination", 100,100,9999));
+        RECOUP = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"recoup"),new DynamicAttribute(("attribute.name.extraspellattributes.determination")));
+        RECOUPABSORB = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"recoupabsorb"),new DynamicAttribute(("attribute.name.extraspellattributes.aureate")));
+        REABSORBARMORMAX = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"reabsorbarmormax"),new ClampedEntityAttribute("attribute.name.extraspellattributes.reabsorbarmorcap", 0,0,9999));
+        IMBALANCEDGUARD = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"imbalancedguard"), new DynamicAttribute(("attribute.name.extraspellattributes.imbalancedguard")));
+        MAGEBANE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"magebane"),new ClampedEntityAttribute("attribute.name.extraspellattributes.magebane", 0,0,999));
+        BLUR = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"blur"),new DynamicAttribute(("attribute.name.extraspellattributes.blur")));
+        BRITTLE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"brittle"),new DynamicAttribute(("attribute.name.extraspellattributes.brittle")));
+        CULL = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"cull"),new DynamicAttribute("attribute.name.extraspellattributes.cull"));
 
     }
 }
