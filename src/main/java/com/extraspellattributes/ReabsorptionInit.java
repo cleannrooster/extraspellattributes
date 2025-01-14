@@ -42,6 +42,8 @@ import net.spell_power.api.*;
 import net.spell_power.mixin.EntityAttributesMixin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 public class ReabsorptionInit implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
@@ -167,14 +169,14 @@ public class ReabsorptionInit implements ModInitializer {
 		((CULL.value())).setTracked(true);
 
 		SpellSchools.FROST.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
-			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*Math.min(1, Calculations.converttoFrost(queryArgs.entity()));
+			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*(-1+Calculations.converttoFrost(queryArgs.entity()));
 		});
 		SpellSchools.FIRE.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
-			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*Calculations.converttoFire(queryArgs.entity());});
+			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*(-1+Calculations.converttoFire(queryArgs.entity()));});
 		SpellSchools.ARCANE.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
-			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*Calculations.converttoArcane(queryArgs.entity());});
+			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*(-1+Calculations.converttoArcane(queryArgs.entity()));});
 		SpellSchools.HEALING.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
-			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*Calculations.converttoHeal(queryArgs.entity());});
+			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*(-1+Calculations.converttoHeal(queryArgs.entity()));});
 		LOGGER.info("Hello Fabric world!");
 
 	}

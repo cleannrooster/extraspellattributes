@@ -44,7 +44,7 @@ public class LivingEntityRecoupMixin  {
 	@Inject(at = @At("HEAD"), method = "onDamage", cancellable = true)
 	public  void damageRecoup(DamageSource source, float amount, CallbackInfo info) {
 		LivingEntity living = (LivingEntity) entity;
-		if(living instanceof RecoupLivingEntityInterface recoupLivingEntityInterface && living instanceof PlayerEntity player && player.getAttributeValue(RECOUP) > 100){
+		if(living instanceof RecoupLivingEntityInterface recoupLivingEntityInterface && living instanceof PlayerEntity player ){
 			recoupLivingEntityInterface.addRecoupHealth(new RecoupInstances.RecoupInstanceHealth(player, 80, amount*(-1+applyAttributeModifiers(1, Sign.POSITIVE.wrap(player.getAttributeInstance(RECOUP))))));
 		}
 

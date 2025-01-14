@@ -26,7 +26,7 @@ public abstract class LivingEntityRecoupAbsorbMixin {
 	@Inject(at = @At("HEAD"), method = "damage", cancellable = true)
 	private void damageHeadRecoupAbsorb( DamageSource source, float amount, CallbackInfoReturnable<Boolean> info){
 		LivingEntity living = (LivingEntity) (Object) this;
-		if(living instanceof RecoupLivingEntityInterface recoupLivingEntityInterface && living instanceof PlayerEntity player && applyAttributeModifiers(1, Sign.POSITIVE.wrap(player.getAttributeInstance(RECOUPABSORB))) > 1){
+		if(living instanceof RecoupLivingEntityInterface recoupLivingEntityInterface && living instanceof PlayerEntity player ){
 			recoupLivingEntityInterface.addRecoupAbsorption(new RecoupInstances.RecoupInstanceAbsorption(player, 80, (amount-(double)fooRPG$applyArmorToDamage(source,(float)(amount))) *(-1+applyAttributeModifiers(1, Sign.POSITIVE.wrap(player.getAttributeInstance(RECOUPABSORB))))));
 		}
 	}
