@@ -24,12 +24,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.DamageTypeTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
+import net.spell_power.api.SpellDamageSource;
+import net.spell_power.api.SpellPowerTags;
 import net.spell_power.mixin.DamageSourcesAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -59,54 +63,56 @@ public class LivingEntityMixin {
 		return (ItemStack)this.syncedArmorStacks.get(slot.getEntitySlotId());
 	}
 
-	@ModifyVariable(at = @At("HEAD"), method = "damage", argsOnly = true)
+	@ModifyVariable(at = @At("HEAD"), method = "applyDamage", argsOnly = true)
 	private float damageHeadReab(float amount, DamageSource source, float originalAmount){
 		LivingEntity living = (LivingEntity) (Object) this;
 
 		amount = originalAmount;
-		if(applyAttributeModifiers(1, Sign.POSITIVE.wrap(living.getAttributeInstance(BLUR)))-1 > 0){
-			amount *= (float) (Calculations.blur(living));
-			if(Calculations.blur(living)-1 < living.getRandom().nextFloat()){
-				amount = 0;
-			}
-		}
-		if(living.age - living.getLastAttackedTime() > 80 || living.age - living.getLastAttackedTime()  < 80) {
-			if (living.getAttributeValue(BRITTLE) > 100) {
-				amount *= (float)Calculations.brittlenegative(living);
-			}
-		}
-		else{
-			if (living.getAttributeValue(BRITTLE) > 100) {
-				amount *= (float) (Calculations.brittle(living));
+		if (!living.isInvulnerableTo(source)) {
 
-			}
-		}
-		if(living.getAttributeInstance(GLANCINGBLOW) != null && source.getAttacker() != null){
-			double glancingchance = Calculations.glancingBlow(living)-1;
-			if (living.getRandom().nextFloat() < glancingchance) {
-				amount *= 0.65F;
-			}
-
-
-		}
-
-		Registry<DamageType> registry = ((DamageSourcesAccessor)living.getDamageSources()).getRegistry();
-
-		if(living.getAttributeInstance(SPELLSUPPRESS) != null && source.getType().equals(registry.entryOf(DamageTypes.MAGIC).value()) || source.getType().equals(registry.entryOf(DamageTypes.INDIRECT_MAGIC).value())){
-			double suppresschance = Calculations.spellSuppress(living)-1;
-
-			if(living.getRandom().nextFloat() < suppresschance){
-				amount *= 0.5F;
-				double acro = Calculations.spellbreak(living)-1;
-				if (living.getRandom().nextFloat() <  acro) {
-					amount *= 0;
+			if (applyAttributeModifiers(1, Sign.POSITIVE.wrap(living.getAttributeInstance(BLUR))) - 1 > 0) {
+				amount *= (float) (Calculations.blur(living));
+				if (Calculations.blur(living) - 1 < living.getRandom().nextFloat()) {
+					amount = 0;
 				}
 			}
-		}
-		if(living.getAttributeInstance(DEFIANCE) != null && amount > 1) {
+			if (living.age - living.getLastAttackedTime() > 80 || living.age - living.getLastAttackedTime() < 80) {
+				if (living.getAttributeValue(BRITTLE) > 100) {
+					amount *= (float) Calculations.brittlenegative(living);
+				}
+			} else {
+				if (living.getAttributeValue(BRITTLE) > 100) {
+					amount *= (float) (Calculations.brittle(living));
 
-			amount -= (float) Math.pow(Calculations.defiance(living),0.5);
-			amount = Math.max(1,amount);
+				}
+			}
+			if (living.getAttributeInstance(GLANCINGBLOW) != null && source.getAttacker() != null) {
+				double glancingchance = Calculations.glancingBlow(living) - 1;
+				if (living.getRandom().nextFloat() < glancingchance) {
+					amount *= 0.65F;
+				}
+
+
+			}
+
+			Registry<DamageType> registry = ((DamageSourcesAccessor) living.getDamageSources()).getRegistry();
+
+			if (living.getAttributeInstance(SPELLSUPPRESS) != null &&  source.getTypeRegistryEntry().isIn(TagKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of("c", "is_magic")))) {
+				double suppresschance = Calculations.spellSuppress(living) - 1;
+
+				if (living.getRandom().nextFloat() < suppresschance) {
+					amount *= 0.5F;
+					double acro = Calculations.spellbreak(living) - 1;
+					if (living.getRandom().nextFloat() < acro) {
+						amount *= 0;
+					}
+				}
+			}
+			if (living.getAttributeInstance(DEFIANCE) != null && amount > 1) {
+
+				amount -= (float) Math.pow(Calculations.defiance(living), 0.5);
+				amount = Math.max(1, amount);
+			}
 		}
 		return amount;
 	}
