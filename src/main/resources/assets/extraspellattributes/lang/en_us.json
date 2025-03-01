@@ -13,6 +13,9 @@
   "attribute.name.extraspellattributes.endu": "Endurance",
   "attribute.name.extraspellattributes.defi": "Damage Mitigation (with Diminishing Returns)",
   "attribute.name.extraspellattributes.aureate": "Damage Absorbed by Armor Recovered as Reabsorption",
+  "attribute.name.extraspellattributes.physique": "Physique",
+  "attribute.name.extraspellattributes.finesse": "Finesse",
+  "attribute.name.extraspellattributes.attunement": "Attunement",
 
   "enchantment.extraspellattributes.suppression": "Suppressing",
   "enchantment.extraspellattributes.defiance": "Defiance",

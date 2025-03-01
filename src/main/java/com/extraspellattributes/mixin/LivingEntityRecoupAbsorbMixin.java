@@ -20,16 +20,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static com.extraspellattributes.ReabsorptionInit.*;
 
-@Mixin(value = LivingEntity.class, priority = 0)
+@Mixin( LivingEntity.class)
 public abstract class LivingEntityRecoupAbsorbMixin {
 	@Shadow(prefix="fooRPG$")
 	protected abstract float fooRPG$applyArmorToDamage(DamageSource source, float amount) ;
 
-	@Inject(at = @At("HEAD"), method = "applyDamage", cancellable = true)
-	private void damageHeadRecoupAbsorb( DamageSource source, float amount, CallbackInfo info){
+	@Inject(at = @At("HEAD"), method = "damage", cancellable = true)
+	private void damageHeadRecoupAbsorb( DamageSource source, float amount, CallbackInfoReturnable<Boolean> info){
 		LivingEntity living = (LivingEntity) (Object) this;
-		if(!source.isIn(DamageTypeTags.BYPASSES_ARMOR) && living instanceof RecoupLivingEntityInterface recoupLivingEntityInterface && living instanceof PlayerEntity player && Calculations.recoup_reabsorb(player) > 1){
-			recoupLivingEntityInterface.addRecoupAbsorption(new RecoupInstances.RecoupInstanceAbsorption(player, 80, (amount-(double)DamageUtil.getDamageLeft(player,(float)((amount) *(-1+Calculations.recoup_reabsorb(player))),source,player.getArmor(),(float)player.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS)))));
+		if( living instanceof RecoupLivingEntityInterface recoupLivingEntityInterface && living instanceof PlayerEntity player && Calculations.recoup_reabsorb(player) > 1F){
+			recoupLivingEntityInterface.addRecoupAbsorption(new RecoupInstances.RecoupInstanceAbsorption(player, 80, (amount-(double)DamageUtil.getDamageLeft(player,(float)((amount)),source,player.getArmor(),(float)player.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS)))*(-1+Calculations.recoup_reabsorb(player))));
 		}
 	}
 }

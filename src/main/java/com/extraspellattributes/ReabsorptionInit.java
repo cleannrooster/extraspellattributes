@@ -80,6 +80,9 @@ public class ReabsorptionInit implements ModInitializer {
 	public static RegistryEntry<EntityAttribute> BLUR;
 	public static RegistryEntry<EntityAttribute> BRITTLE;
 	public static RegistryEntry<EntityAttribute> CULL;
+	public static RegistryEntry<EntityAttribute> PHYSIQUE;
+	public static RegistryEntry<EntityAttribute> FINESSE;
+	public static RegistryEntry<EntityAttribute> ATTUNEMENT;
 
 
 	public static final GameRules.Key<GameRules.BooleanRule> CLASSIC_ENERGYSHIELD = GameRuleRegistry.register("classicEnergyShield", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
@@ -167,16 +170,34 @@ public class ReabsorptionInit implements ModInitializer {
 		((BRITTLE.value())).setTracked(true);
 		((BLUR.value())).setTracked(true);
 		((CULL.value())).setTracked(true);
+		((PHYSIQUE.value())).setTracked(true);
+		((FINESSE.value())).setTracked(true);
+		((ATTUNEMENT.value())).setTracked(true);
 
 		SpellSchools.FROST.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
-			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*(-1+Calculations.converttoFrost(queryArgs.entity()));
-		});
+			double add = 0;
+			if(queryArgs.entity().getAttributes() != null){
+				add = SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*(-1+Calculations.converttoFrost(queryArgs.entity()));
+			}
+			return add;});
 		SpellSchools.FIRE.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
-			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*(-1+Calculations.converttoFire(queryArgs.entity()));});
+			double add = 0;
+			if(queryArgs.entity().getAttributes() != null){
+				add = SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*(-1+Calculations.converttoFire(queryArgs.entity()));
+			}
+			return add;});
 		SpellSchools.ARCANE.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
-			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*(-1+Calculations.converttoArcane(queryArgs.entity()));});
+			double add = 0;
+			if(queryArgs.entity().getAttributes() != null){
+				add = SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*(-1+Calculations.converttoArcane(queryArgs.entity()));
+			}
+			return add;});
 		SpellSchools.HEALING.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
-			return SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*(-1+Calculations.converttoHeal(queryArgs.entity()));});
+			double add = 0;
+			if(queryArgs.entity().getAttributes() != null){
+				add = SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*(-1+Calculations.converttoHeal(queryArgs.entity()));
+			}
+			return add;});
 		LOGGER.info("Hello Fabric world!");
 
 	}

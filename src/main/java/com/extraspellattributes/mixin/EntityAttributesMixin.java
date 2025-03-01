@@ -37,6 +37,9 @@ public class EntityAttributesMixin {
         BLUR = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"blur"),new DynamicAttribute(("attribute.name.extraspellattributes.blur")));
         BRITTLE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"brittle"),new DynamicAttribute(("attribute.name.extraspellattributes.brittle")));
         CULL = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"cull"),new DynamicAttribute("attribute.name.extraspellattributes.cull"));
+        PHYSIQUE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"physique"),new ClampedEntityAttribute("attribute.name.extraspellattributes.physique",0,-2048,2048));
+        FINESSE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"finesse"),new ClampedEntityAttribute("attribute.name.extraspellattributes.finesse",0,-2048,2048));
+        ATTUNEMENT = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"attunement"),new ClampedEntityAttribute("attribute.name.extraspellattributes.attunement",0,-2048,2048));
 
     }
 }

@@ -63,7 +63,7 @@ public class LivingEntityMixin {
 		return (ItemStack)this.syncedArmorStacks.get(slot.getEntitySlotId());
 	}
 
-	@ModifyVariable(at = @At("HEAD"), method = "applyDamage", argsOnly = true)
+	@ModifyVariable(at = @At("HEAD"), method = "damage", argsOnly = true)
 	private float damageHeadReab(float amount, DamageSource source, float originalAmount){
 		LivingEntity living = (LivingEntity) (Object) this;
 
@@ -252,6 +252,9 @@ public class LivingEntityMixin {
 		info.getReturnValue().add(BLUR);
 		info.getReturnValue().add(BRITTLE);
 		info.getReturnValue().add(CULL);
+		info.getReturnValue().add(PHYSIQUE);
+		info.getReturnValue().add(FINESSE);
+		info.getReturnValue().add(ATTUNEMENT);
 
 	}
 }
