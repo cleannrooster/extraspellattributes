@@ -108,12 +108,20 @@ public class LivingEntityMixin {
 					}
 				}
 			}
-			if (living.getAttributeInstance(DEFIANCE) != null && amount > 1) {
-
-				amount -= (float) Math.pow(Calculations.defiance(living), 0.5);
-				amount = Math.max(1, amount);
+			if(Calculations.fortitude(living) > living.getMaxHealth()/5 ||
+					Calculations.endurance(living) < 0.75 ){
+				float damageAbove = (float) Math.max(0,living.getHealth() - Calculations.fortitude(living));
+				if(amount > damageAbove) {
+					float damageBelow = (float) ((amount - damageAbove) * Calculations.endurance(living));
+					if (damageBelow > 0) {
+						amount = damageAbove + damageBelow;
+					}
+				}
 			}
+
+
 		}
+
 		return amount;
 	}
 	@Inject(at = @At("HEAD"), method = "tick", cancellable = true)
@@ -169,6 +177,14 @@ public class LivingEntityMixin {
 				living.damageArmor(source, amount);
 				value *= 3;
 				value = DamageUtil.getDamageLeft(living, value, source, (float) living.getArmor(), (float) living.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS));
+			}
+		}
+		if (!source.isIn(DamageTypeTags.BYPASSES_ARMOR)) {
+
+			if (living.getAttributeInstance(DEFIANCE) != null && amount > 1) {
+
+				value -= (float) Math.pow(Calculations.defiance(living), 0.5);
+				value = Math.max(1, amount);
 			}
 		}
 		return value;
@@ -255,6 +271,8 @@ public class LivingEntityMixin {
 		info.getReturnValue().add(PHYSIQUE);
 		info.getReturnValue().add(FINESSE);
 		info.getReturnValue().add(ATTUNEMENT);
+		info.getReturnValue().add(ENDURANCE);
+		info.getReturnValue().add(FORTITUDE);
 
 	}
 }

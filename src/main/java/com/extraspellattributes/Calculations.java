@@ -28,6 +28,15 @@ public class Calculations {
     public static double defiance(LivingEntity player){
         return player.getAttributeValue(DEFIANCE);
     }
+    public static double fortitude(LivingEntity player){
+        return applyAttributeModifiers(player.getMaxHealth()/5,Sign.POSITIVE.wrap(player.getAttributeInstance(FORTITUDE)));
+
+    }
+    public static double endurance(LivingEntity player){
+        return 15/(15+(applyAttributeModifiers(5,Sign.POSITIVE.wrap(player.getAttributeInstance(ENDURANCE)))));
+
+    }
+
     public static double spellbreak(LivingEntity player){
 
         return applyAttributeModifiers(1,Sign.POSITIVE.wrap(player.getAttributeInstance(ACRO)));

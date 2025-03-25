@@ -40,6 +40,8 @@ public class EntityAttributesMixin {
         PHYSIQUE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"physique"),new ClampedEntityAttribute("attribute.name.extraspellattributes.physique",0,-2048,2048));
         FINESSE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"finesse"),new ClampedEntityAttribute("attribute.name.extraspellattributes.finesse",0,-2048,2048));
         ATTUNEMENT = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"attunement"),new ClampedEntityAttribute("attribute.name.extraspellattributes.attunement",0,-2048,2048));
+        FORTITUDE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"fortitude"),new ClampedEntityAttribute("attribute.name.extraspellattributes.fortitude",0,0,2048));
+        ENDURANCE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"endurance"),new DynamicAttribute("attribute.name.extraspellattributes.endurance"));
 
     }
 }

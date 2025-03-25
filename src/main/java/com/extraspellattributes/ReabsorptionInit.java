@@ -71,7 +71,10 @@ public class ReabsorptionInit implements ModInitializer {
 	public static RegistryEntry<EntityAttribute> SPELLSUPPRESS;
 	public static RegistryEntry<EntityAttribute> ACRO;
 	public static RegistryEntry<EntityAttribute> DEFIANCE ;
-	public static RegistryEntry<EntityAttribute> RECOUP;
+    public static RegistryEntry<EntityAttribute> ENDURANCE ;
+	public static RegistryEntry<EntityAttribute> FORTITUDE ;
+
+    public static RegistryEntry<EntityAttribute> RECOUP;
 	public static RegistryEntry<EntityAttribute> RECOUPABSORB;
 	public static RegistryEntry<EntityAttribute> REABSORBARMORMAX;
 
@@ -111,6 +114,8 @@ public class ReabsorptionInit implements ModInitializer {
 					player.sendMessage(Text.of("blur: "+String.valueOf(Calculations.blur(player))),false);
 					player.sendMessage(Text.of("brittle: "+String.valueOf(Calculations.brittle(player))),false);
 					player.sendMessage(Text.of("cull: "+String.valueOf(Calculations.cull(player))),false);
+					player.sendMessage(Text.of("endurance: "+String.valueOf(Calculations.endurance(player))),false);
+					player.sendMessage(Text.of("endurance_threshold: "+String.valueOf(Calculations.fortitude(player))),false);
 
 					return 1;
 
