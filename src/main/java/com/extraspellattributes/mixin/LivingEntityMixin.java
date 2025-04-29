@@ -108,9 +108,9 @@ public class LivingEntityMixin {
 					}
 				}
 			}
-			if(Calculations.fortitude(living) > living.getMaxHealth()/5 ||
-					Calculations.endurance(living) < 0.75 ){
-				float damageAbove = (float) Math.max(0,living.getHealth() - Calculations.fortitude(living));
+			if(Calculations.fortitude(living) > living.getMaxHealth()/5F ||
+					Calculations.endurance(living) < 10F/(15F) ){
+				float damageAbove = (float) Math.max(0,living.getAbsorptionAmount() + living.getHealth() - Calculations.fortitude(living));
 				if(amount > damageAbove) {
 					float damageBelow = (float) ((amount - damageAbove) * Calculations.endurance(living));
 					if (damageBelow > 0) {

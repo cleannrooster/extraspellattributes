@@ -33,7 +33,7 @@ public class Calculations {
 
     }
     public static double endurance(LivingEntity player){
-        return 15/(15+(applyAttributeModifiers(5,Sign.POSITIVE.wrap(player.getAttributeInstance(ENDURANCE)))));
+        return 10/(10+(applyAttributeModifiers(5,Sign.POSITIVE.wrap(player.getAttributeInstance(ENDURANCE)))));
 
     }
 
