@@ -9,6 +9,7 @@ import com.extraspellattributes.interfaces.RecoupLivingEntityInterface;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.DamageUtil;
@@ -20,6 +21,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.damage.DamageTypes;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -30,6 +32,7 @@ import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.spell_power.api.SpellDamageSource;
@@ -51,6 +54,7 @@ import static com.extraspellattributes.ReabsorptionInit.*;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
+
 	@Shadow
 	private DefaultedList<ItemStack> syncedHandStacks;
 	@Shadow
@@ -62,7 +66,12 @@ public class LivingEntityMixin {
 	private ItemStack getSyncedArmorStack(EquipmentSlot slot) {
 		return (ItemStack)this.syncedArmorStacks.get(slot.getEntitySlotId());
 	}
+	@Inject(at = @At("TAIL"), method = "applyDamage",cancellable = true)
+	private void damageDissolution( DamageSource source, float originalAmount,CallbackInfo ci){
 
+
+	}
+	private long brittleTime = 0;
 	@ModifyVariable(at = @At("HEAD"), method = "damage", argsOnly = true)
 	private float damageHeadReab(float amount, DamageSource source, float originalAmount){
 		LivingEntity living = (LivingEntity) (Object) this;
@@ -76,9 +85,12 @@ public class LivingEntityMixin {
 					amount = 0;
 				}
 			}
-			if (living.age - living.getLastAttackedTime() > 80 || living.age - living.getLastAttackedTime() < 80) {
+			if (living.age - living.getLastAttackedTime() > 80 || living.age - brittleTime < 80) {
 				if (living.getAttributeValue(BRITTLE) > 100) {
 					amount *= (float) Calculations.brittlenegative(living);
+				}
+				if(living.age - living.getLastAttackedTime() > 80){
+					this.brittleTime = living.age;
 				}
 			} else {
 				if (living.getAttributeValue(BRITTLE) > 100) {
@@ -123,6 +135,20 @@ public class LivingEntityMixin {
 		}
 
 		return amount;
+	}
+	@Inject(at = @At("RETURN"), method = "getHealth", cancellable = true)
+	public void getHealthDissolution(CallbackInfoReturnable<Float> cir) {
+
+		LivingEntity living = (LivingEntity) (Object) this;
+		if (living.getAttributeValue(DISSOLUTION) > 0 && living.hasStatusEffect(DISSOLUTIONEFFECT) ) {
+			if(cir.getReturnValue() != null && cir.getReturnValue() > 0.0F) {
+				cir.setReturnValue(living.getMaxHealth());
+			}
+			else{
+				cir.setReturnValue(0F);
+			}
+
+		}
 	}
 	@Inject(at = @At("HEAD"), method = "tick", cancellable = true)
 	public void tick_absorption_HEAD(CallbackInfo info) {
@@ -184,11 +210,11 @@ public class LivingEntityMixin {
 			if (living.getAttributeInstance(DEFIANCE) != null && amount > 1) {
 
 				value -= (float) Math.pow(Calculations.defiance(living), 0.5);
-				value = Math.max(1, amount);
 			}
 		}
 		return value;
 	}
+
 	@Unique
 	private static final ThreadLocal<Boolean> PROCESSING = ThreadLocal.withInitial(() -> false);
 
@@ -273,6 +299,7 @@ public class LivingEntityMixin {
 		info.getReturnValue().add(ATTUNEMENT);
 		info.getReturnValue().add(ENDURANCE);
 		info.getReturnValue().add(FORTITUDE);
+		info.getReturnValue().add(DISSOLUTION);
 
 	}
 }

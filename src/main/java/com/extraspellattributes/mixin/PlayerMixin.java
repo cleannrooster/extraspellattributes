@@ -12,10 +12,12 @@ import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,6 +30,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.extraspellattributes.ReabsorptionInit.DISSOLUTION;
+import static com.extraspellattributes.ReabsorptionInit.DISSOLUTIONEFFECT;
 import static java.lang.Math.max;
 import static net.minecraft.util.math.MathHelper.sqrt;
 
@@ -85,8 +89,12 @@ public class PlayerMixin implements PlayerInterface, RecoupLivingEntityInterface
 
             this.resetReabDamageAbsorbed();
         }
-    }
 
+    }
+    @Inject(at = @At("TAIL"), method = "applyDamage", cancellable = true)
+    protected void applyDamageMixinSpellbladeTAIL(DamageSource source, float amount, CallbackInfo info) {
+
+    }
 
     @Override
     public List<RecoupInstances.RecoupInstanceHealth> getRecoupsHealth() {
@@ -101,17 +109,35 @@ public class PlayerMixin implements PlayerInterface, RecoupLivingEntityInterface
 
     @Override
     public void tickRecoups() {
-        for(RecoupInstances.RecoupInstanceHealth instance : this.recoupInstancesHealth){
-            instance.tick();
-        }
-        for(RecoupInstances.RecoupInstanceAbsorption instance : this.recoupInstancesAbsorption){
-            instance.tick();
-        }
-        if(!this.recoupInstancesHealth.isEmpty()) {
-            this.recoupInstancesHealth.removeIf(recoupInstance -> recoupInstance.remainingduration <= 0);
-        }
-        if(!this.recoupInstancesAbsorption.isEmpty()) {
-            this.recoupInstancesAbsorption.removeIf(recoupInstance -> recoupInstance.remainingduration <= 0);
+        PlayerEntity player = (PlayerEntity) (Object) this;
+        if(player.age % 10 == 0) {
+
+            double toRecover = 0;
+            for (RecoupInstances.RecoupInstanceHealth instance : this.recoupInstancesHealth) {
+                if(instance.remainingduration > 0) {
+                    toRecover += instance.value / (instance.duration / 8);
+                    instance.remainingvalue -= toRecover;
+                }
+                instance.remainingduration -= 10;
+            }
+            player.heal(Math.max(0,(float) toRecover));
+            double toRecoverAbs = 0;
+            for (RecoupInstances.RecoupInstanceAbsorption instance : this.recoupInstancesAbsorption) {
+                if(instance.remainingduration > 0) {
+
+                    toRecoverAbs += instance.value / (instance.duration / 8);
+                    instance.remainingvalue -= toRecoverAbs;
+                }
+                instance.remainingduration -= 10;
+            }
+            player.setAbsorptionAmount((float) (player.getAbsorptionAmount()+Math.max(0,toRecoverAbs)));
+            if (!this.recoupInstancesHealth.isEmpty()) {
+                this.recoupInstancesHealth.removeIf(recoupInstance -> recoupInstance.remainingduration <= 0);
+            }
+            if (!this.recoupInstancesAbsorption.isEmpty()) {
+                this.recoupInstancesAbsorption.removeIf(recoupInstance -> recoupInstance.remainingduration <= 0);
+            }
+
         }
     }
 

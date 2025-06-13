@@ -14,10 +14,11 @@
   "attribute.name.extraspellattributes.fortitude": "Endurance Threshold",
 
   "attribute.name.extraspellattributes.defi": "Physical Damage Mitigation (with Diminishing Returns)",
-  "attribute.name.extraspellattributes.aureate": "Damage Absorbed by Armor Recovered as Reabsorption",
+  "attribute.name.extraspellattributes.aureate": "Damage Absorbed by Armor Recouped as Reabsorption",
   "attribute.name.extraspellattributes.physique": "Physique",
   "attribute.name.extraspellattributes.finesse": "Finesse",
   "attribute.name.extraspellattributes.attunement": "Attunement",
+  "attribute.name.extraspellattributes.dissolution": "Dissolution Gained Per Damage Taken, for 4 seconds. You are at Maximum Health while in Dissolution.",
 
   "enchantment.extraspellattributes.suppression": "Suppressing",
   "enchantment.extraspellattributes.defiance": "Defiance",
@@ -28,6 +29,9 @@
   "enchantment.extraspellattributes.aureate": "Absorbing",
   "enchantment.extraspellattributes.enduring": "Enduring",
   "enchantment.extraspellattributes.fortified": "Fortified",
+  "enchantment.extraspellattributes.dissolution": "Curse of Dissolution",
+  "enchantment.extraspellattributes.ethereal": "Curse of the Ethereal",
+  "effect.extraspellattributes.dissolution": "Dissolution",
 
   "enchantment.extraspellattributes.suppression.desc": "Chance to Suppress Magic Damage, halving the damage taken. Stacks.",
   "enchantment.extraspellattributes.defiance.desc": "Mitigates a flat amount of damage; this enchantment stacks with diminishing returns.",
@@ -38,8 +42,10 @@
   "enchantment.extraspellattributes.aureate.desc": "Some damage absorbed by armor is regenerated as yellow hearts, up to maximum reabsorption. Gives some reabsorption. Stacks.",
   "enchantment.extraspellattributes.enduring.desc": "Reduces damage taken past your Endurance Threshold. Stacks. Minimum Endurance Threshold is 20% of your Maximum Life.",
   "enchantment.extraspellattributes.fortified.desc": "Increases the threshold at which your Endurance reduces damage taken an amount equal to total enchantment level. Stacks. Minimum Endurance Damage Reduction is 25%.",
+  "enchantment.extraspellattributes.dissolution.desc": "You gain Dissolution equal to the damage you take, lowering your Maximum Health until you take no damage for 4 seconds. You are always at maximum health while in Dissolution.",
+  "enchantment.extraspellattributes.ethereal.desc": "You lose 95% of your health, but gain +5 and +100% Reabsorption.",
 
-  "attribute.name.extraspellattributes.determination": "Damage Taken Recovered as Health Over the Next 4 Seconds",
+  "attribute.name.extraspellattributes.determination": "Damage Taken Recouped over 4 seconds",
 
   "desc.extraspellattributes.glance": "A Glancing Blow deals only 65% damage. You cannot receive Glancing Blows from damage that doesn't come from an entity (Such as Fire and Poison).",
 

@@ -18,11 +18,12 @@ public class RecoupInstances{
             this.remainingduration = duration;
         }
         public void tick(){
-            if(this.remainingduration > 0) {
-                this.player.heal((float) (this.value / duration));
-                this.remainingvalue -= (float) (this.value / duration);
-                this.remainingduration--;
+            if(this.remainingduration > 0 && this.remainingduration % 10 == 0) {
+                this.player.heal(10.0F*((float) (this.value / duration)));
+                this.remainingvalue -= 10.0F*((float) (this.value / duration));
             }
+            this.remainingduration--;
+
         }
     }
     public static class RecoupInstanceAbsorption{
@@ -39,11 +40,12 @@ public class RecoupInstances{
                 this.remainingduration = duration;
         }
         public void tick(){
-            if(this.remainingduration > 0) {
-                this.player.setAbsorptionAmount(this.player.getAbsorptionAmount()+(float) (this.value / duration));
-                this.remainingvalue -= (float) (this.value / duration);
-                this.remainingduration--;
+            if(this.remainingduration > 0 && this.remainingduration % 10 == 0) {
+                this.player.setAbsorptionAmount(this.player.getAbsorptionAmount()+10.0F*((float) (this.value / duration)));
+                this.remainingvalue -= 10.0F*((float) (this.value / duration));
             }
+            this.remainingduration--;
+
         }
     }
 

@@ -4,6 +4,7 @@ import com.extraspellattributes.api.Sign;
 import com.extraspellattributes.api.Signed;
 import com.extraspellattributes.config.ServerConfig;
 import com.extraspellattributes.config.ServerConfigWrapper;
+import com.extraspellattributes.effects.Dissolution;
 import com.extraspellattributes.items.ItemInit;
 import com.extraspellattributes.mixin.EntityAttributeInstanceInvoker;
 import com.extraspellattributes.trades.CustomTrades;
@@ -24,6 +25,8 @@ import net.minecraft.enchantment.EnchantmentLevelBasedValue;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.effect.AttributeEnchantmentEffect;
 import net.minecraft.entity.attribute.*;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.loot.LootPool;
@@ -73,6 +76,7 @@ public class ReabsorptionInit implements ModInitializer {
 	public static RegistryEntry<EntityAttribute> DEFIANCE ;
     public static RegistryEntry<EntityAttribute> ENDURANCE ;
 	public static RegistryEntry<EntityAttribute> FORTITUDE ;
+	public static RegistryEntry<EntityAttribute> DISSOLUTION ;
 
     public static RegistryEntry<EntityAttribute> RECOUP;
 	public static RegistryEntry<EntityAttribute> RECOUPABSORB;
@@ -87,6 +91,7 @@ public class ReabsorptionInit implements ModInitializer {
 	public static RegistryEntry<EntityAttribute> FINESSE;
 	public static RegistryEntry<EntityAttribute> ATTUNEMENT;
 
+	public static  RegistryEntry.Reference<StatusEffect> DISSOLUTIONEFFECT;
 
 	public static final GameRules.Key<GameRules.BooleanRule> CLASSIC_ENERGYSHIELD = GameRuleRegistry.register("classicEnergyShield", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
 	static{
@@ -123,6 +128,8 @@ public class ReabsorptionInit implements ModInitializer {
 
 		AutoConfig.register(ServerConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
 		config = AutoConfig.getConfigHolder(ServerConfigWrapper.class).getConfig().server;
+		DISSOLUTIONEFFECT = Registry.registerReference(Registries.STATUS_EFFECT,Identifier.of(MOD_ID,"dissolution"),new Dissolution(StatusEffectCategory.HARMFUL, 0xffff00)
+				.addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH,Identifier.of(MOD_ID,"dissolution"),-1, EntityAttributeModifier.Operation.ADD_VALUE));
 
 
 		ItemInit.register();
