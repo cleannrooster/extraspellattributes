@@ -40,7 +40,11 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
+import net.spell_engine.api.event.CombatEvents;
 import net.spell_engine.api.spell.ExternalSpellSchools;
+import net.spell_engine.api.spell.Spell;
+import net.spell_engine.api.spell.event.SpellEvents;
+import net.spell_engine.internals.SpellHelper;
 import net.spell_power.api.*;
 import net.spell_power.mixin.EntityAttributesMixin;
 import org.slf4j.Logger;
@@ -90,8 +94,10 @@ public class ReabsorptionInit implements ModInitializer {
 	public static RegistryEntry<EntityAttribute> PHYSIQUE;
 	public static RegistryEntry<EntityAttribute> FINESSE;
 	public static RegistryEntry<EntityAttribute> ATTUNEMENT;
+	public static RegistryEntry<EntityAttribute> INEVITABILITY;
 
 	public static  RegistryEntry.Reference<StatusEffect> DISSOLUTIONEFFECT;
+	public static  RegistryEntry.Reference<StatusEffect> INEVITABILITYEFFECT;
 
 	public static final GameRules.Key<GameRules.BooleanRule> CLASSIC_ENERGYSHIELD = GameRuleRegistry.register("classicEnergyShield", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
 	static{
@@ -130,8 +136,8 @@ public class ReabsorptionInit implements ModInitializer {
 		config = AutoConfig.getConfigHolder(ServerConfigWrapper.class).getConfig().server;
 		DISSOLUTIONEFFECT = Registry.registerReference(Registries.STATUS_EFFECT,Identifier.of(MOD_ID,"dissolution"),new Dissolution(StatusEffectCategory.HARMFUL, 0xffff00)
 				.addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH,Identifier.of(MOD_ID,"dissolution"),-1, EntityAttributeModifier.Operation.ADD_VALUE));
-
-
+		INEVITABILITYEFFECT = Registry.registerReference(Registries.STATUS_EFFECT,Identifier.of(MOD_ID,"inevitability"),new Dissolution(StatusEffectCategory.BENEFICIAL, 0xffff00)
+				.addAttributeModifier(SpellPowerMechanics.CRITICAL_DAMAGE.attributeEntry,Identifier.of(MOD_ID,"inevitability"),0.1, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 		ItemInit.register();
 
 		CustomTrades.registerCustomTrades();
@@ -185,6 +191,7 @@ public class ReabsorptionInit implements ModInitializer {
 		((PHYSIQUE.value())).setTracked(true);
 		((FINESSE.value())).setTracked(true);
 		((ATTUNEMENT.value())).setTracked(true);
+		((INEVITABILITY.value())).setTracked(true);
 
 		SpellSchools.FROST.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
 			double add = 0;

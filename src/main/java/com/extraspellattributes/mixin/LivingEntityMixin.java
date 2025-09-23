@@ -157,7 +157,13 @@ public class LivingEntityMixin {
 			recoupLivingEntityInterface.tickRecoups();
 		}
 		double maximum = living.getAttributeValue(WARDING);
-
+		if(living instanceof PlayerEntity player && player.age % 20 == 0 &&  player.getAttributeValue(INEVITABILITY) > 0){
+			int i = 0;
+			if(player.hasStatusEffect(INEVITABILITYEFFECT)){
+				i += (int) (player.getStatusEffect(INEVITABILITYEFFECT).getAmplifier() +player.getAttributeValue(INEVITABILITY));
+			}
+			player.addStatusEffect(new StatusEffectInstance(INEVITABILITYEFFECT,-1,Math.min(i,9),false,false));
+		}
 		if (living instanceof PlayerInterface damageInterface && maximum > 0) {
 
 				float additional = (float)maximum*0.25F*0.05F*config.factor;
@@ -300,6 +306,7 @@ public class LivingEntityMixin {
 		info.getReturnValue().add(ENDURANCE);
 		info.getReturnValue().add(FORTITUDE);
 		info.getReturnValue().add(DISSOLUTION);
+		info.getReturnValue().add(INEVITABILITY);
 
 	}
 }

@@ -19,6 +19,7 @@
   "attribute.name.extraspellattributes.finesse": "Finesse",
   "attribute.name.extraspellattributes.attunement": "Attunement",
   "attribute.name.extraspellattributes.dissolution": "Dissolution Gained Per Damage Taken, for 4 seconds. You are at Maximum Health while in Dissolution.",
+  "attribute.name.extraspellattributes.inevitability": "Inevitability gained per second. +10% Spell Crit Damage per Inevitability, up to +100%.",
 
   "enchantment.extraspellattributes.suppression": "Suppressing",
   "enchantment.extraspellattributes.defiance": "Defiance",
@@ -31,7 +32,9 @@
   "enchantment.extraspellattributes.fortified": "Fortified",
   "enchantment.extraspellattributes.dissolution": "Curse of Dissolution",
   "enchantment.extraspellattributes.ethereal": "Curse of the Ethereal",
+
   "effect.extraspellattributes.dissolution": "Dissolution",
+  "effect.extraspellattributes.inevitability": "Inevitability",
 
   "enchantment.extraspellattributes.suppression.desc": "Chance to Suppress Magic Damage, halving the damage taken. Stacks.",
   "enchantment.extraspellattributes.defiance.desc": "Mitigates a flat amount of damage; this enchantment stacks with diminishing returns.",
