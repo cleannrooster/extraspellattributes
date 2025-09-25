@@ -1,0 +1,41 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+#issueTrackerURL = ""
+license = "Insert License Here"
+
+[[mods]]
+modId = "extraspellattributes"
+version = "${version}"
+displayName = "Extra RPG Attributes"
+authors = "Me!"
+description = '''
+This is an example description! Tell everyone what your mod is about!
+'''
+#logoFile = ""
+
+[[dependencies.extraspellattributes]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.extraspellattributes]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+
+[[dependencies.extraspellattributes]]
+modId = "spell_engine"
+type = "required"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"
+
+
+
+[[mixins]]
+config = "extraspellattributes.mixins.json"

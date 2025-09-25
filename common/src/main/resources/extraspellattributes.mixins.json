@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "package": "com.cleannrooster.extraspellattributes.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [
+    "InGameHudMixin"
+  ],
+  "mixins": [
+    "AttributeMixin",
+    "EntityAttributeInstanceInvoker",
+    "EntityAttributeInstanceMixin",
+    "EntityAttributesMixin",
+    "ItemstackMixin",
+    "LivingEntityCullMixin",
+    "LivingEntityMixin",
+    "LivingEntityRecoupAbsorbMixin",
+    "LivingEntityRecoupMixin",
+    "PlayerMixin"],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

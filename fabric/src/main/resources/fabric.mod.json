@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "extraspellattributes",
+	"version": "${version}",
+	"name": "Extra RPG Attributes",
+	"description": "For use with RPG series mods",
+	"authors": [
+		"cleannrooster (Forg)"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/template-mod/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.cleannrooster.extraspellattributes.fabric.ExtraSpellFabric"
+		]
+	},
+	"accessWidener" : "extraspellattributes.accesswidener",
+	"mixins": [
+		"extraspellattributes.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.22",
+		"minecraft": "~1.21",
+		"trinkets": ">=3.7.0",
+		"spell_power": ">=0.10.1+1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"conflicts": {
+		"spellbladenext": "<=1.8"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
