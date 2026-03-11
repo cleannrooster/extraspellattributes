@@ -1,0 +1,77 @@
+{
+  "school": "physical_ranged",
+  "range": 0.0,
+  "tier": 1,
+  "type": "PASSIVE",
+  "passive": {
+    "triggers": [
+      {
+        "type": "MELEE_IMPACT",
+        "chance": 1
+      },
+      {
+        "target_override": "CASTER",
+        "type": "ARROW_IMPACT",
+        "chance": 1
+      },
+      {
+        "type": "SPELL_IMPACT_SPECIFIC",
+        "chance": 1,
+        "spell": {
+          "archetype": "RANGED",
+          "type": "ACTIVE"
+        }
+      },
+      {
+        "type": "SPELL_IMPACT_SPECIFIC",
+        "chance": 1,
+        "spell": {
+          "archetype": "MELEE",
+          "type": "ACTIVE"
+        }
+      }
+    ]
+  },
+  "target": {
+    "type": "FROM_TRIGGER"
+  },
+  "impacts": [
+    {
+      "action": {
+        "type": "DAMAGE",
+        "damage": {
+          "spell_power_coefficient": 1,
+          "knockback": 0.0
+        }
+      },
+      "particles": [
+        {
+          "particle_id": "spell_engine:magic_spark_burst",
+          "origin": "CENTER",
+          "shape": "SPHERE",
+          "count": 40.0,
+          "min_speed": 0.5,
+          "max_speed": 0.8,
+          "color_rgba": 3003121919
+        },
+        {
+          "particle_id": "spell_engine:aura_effect_409",
+          "origin": "CENTER",
+          "shape": "LINE",
+          "count": 1.0,
+          "max_speed": 0.0,
+          "color_rgba": 3003121919,
+          "follow_entity": true
+        }
+      ],
+      "id": "spell_engine:generic_poison_impact"
+
+    }
+  ],
+  "cost": {
+    "durability": 0,
+    "cooldown": {
+      "duration": 2.0
+    }
+  }
+}

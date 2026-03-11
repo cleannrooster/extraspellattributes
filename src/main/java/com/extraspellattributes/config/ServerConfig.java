@@ -44,6 +44,14 @@ public class ServerConfig  implements ConfigData {
     public float undying_soul_mod = 0.3F;
     @Comment("Mod of gold absorption ring")
     public float gold_absorption_ring_mod = 4;
+    @Comment("Mod of rose ring")
+    public float rose = 0.4F;
+    @Comment("Mod of rust ring")
+    public float rust = 0.4F;
+    @Comment("Mod of blood ring")
+    public float blood = 0.4F;
+    @Comment("Mod of sand ring")
+    public float sand = 0.4F;
     @Comment("Mod of netherite absorption ring")
     public float netherite_absorption_ring_mod = 6;
     @Comment("Mod of gold necklace")

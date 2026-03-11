@@ -12,7 +12,8 @@
 		"LivingEntityRecoupAbsorbMixin",
 		"LivingEntityCullMixin",
 		"EntityAttributeInstanceMixin",
-		"EntityAttributeInstanceInvoker"
+		"EntityAttributeInstanceInvoker",
+      "SpellAssignmentsMixin"
 	],
 	"client": [
 		"InGameHudMixin"

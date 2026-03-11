@@ -7,7 +7,9 @@
     "extraspellattributes:spellbreak",
     "extraspellattributes:suppression",
     "extraspellattributes:warding",
-    "extraspellattributes:aureate"
+    "extraspellattributes:aureate",
+    "extraspellattributes:fortified",
+    "extraspellattributes:enduring"
 
   ]
 }

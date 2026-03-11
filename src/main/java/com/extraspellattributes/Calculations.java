@@ -2,10 +2,15 @@ package com.extraspellattributes;
 
 import com.extraspellattributes.api.Sign;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.registry.entry.RegistryEntry;
 
 import static com.extraspellattributes.ReabsorptionInit.*;
 
 public class Calculations {
+    public static double vuln(LivingEntity player, RegistryEntry<EntityAttribute> attribute){
+        return applyAttributeModifiers(1D, Sign.POSITIVE.wrap(player.getAttributeInstance(attribute)))-1.0D;
+    }
     public static double converttoFrost(LivingEntity player){
         return applyAttributeModifiers(1, Sign.POSITIVE.wrap(player.getAttributeInstance(CONVERTTOFROST)));
     }

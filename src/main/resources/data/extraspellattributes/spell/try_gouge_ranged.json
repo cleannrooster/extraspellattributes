@@ -1,0 +1,45 @@
+{
+  "school": "physical_ranged",
+  "range": 0.0,
+  "tier": 1,
+  "type": "PASSIVE",
+  "learn":{},
+
+  "passive": {
+    "triggers": [
+      {
+        "type": "ARROW_IMPACT",
+        "chance": 1
+      },
+      {
+        "type": "SPELL_IMPACT_SPECIFIC",
+        "chance": 1,
+        "spell": {
+          "archetype": "RANGED",
+          "type": "ACTIVE"
+        }
+      }
+    ]
+  },
+  "target": {
+    "type": "FROM_TRIGGER"
+  },
+  "impacts": [
+    {
+      "action": {
+        "type": "CUSTOM",
+        "damage": {
+          "spell_power_coefficient": 1,
+          "knockback": 0.0
+        },
+        "custom": {
+        "handler": "extraspellattributes:try_sneak",
+          "intent":"HARMFUL"
+      }
+      }
+    }
+  ],
+  "cost": {
+    "durability": 0
+  }
+}
