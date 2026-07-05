@@ -6,7 +6,6 @@ import com.extraspellattributes.api.WeaponSkills;
 import com.extraspellattributes.config.ServerConfig;
 import com.extraspellattributes.config.ServerConfigWrapper;
 import com.extraspellattributes.effects.Dissolution;
-import com.extraspellattributes.effects.Vulnerability;
 import com.extraspellattributes.items.ItemInit;
 import com.extraspellattributes.mixin.EntityAttributeInstanceInvoker;
 import com.extraspellattributes.trades.CustomTrades;
@@ -29,11 +28,10 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelBasedValue;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.enchantment.effect.AttributeEnchantmentEffect;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.*;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.loot.LootPool;
@@ -49,11 +47,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import net.spell_engine.SpellEngineMod;
-import net.spell_engine.api.entity.SpellEngineAttributes;
-import net.spell_engine.api.event.CombatEvents;
 import net.spell_engine.api.spell.ExternalSpellSchools;
+import net.spell_engine.api.spell.event.SpellHandlers;
 import net.spell_engine.api.spell.event.SpellEvents;
-import net.spell_engine.client.util.Color;
 import net.spell_engine.mixin.entity.PlayerEntityEvents;
 import net.spell_power.api.*;
 import net.spell_power.mixin.EntityAttributesMixin;
@@ -62,8 +58,6 @@ import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-import java.util.HashMap;
-import java.util.List;
 
 public class ReabsorptionInit implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
@@ -78,6 +72,9 @@ public class ReabsorptionInit implements ModInitializer {
 	public static RegistryKey<Enchantment> SUPPRESSINGENCHANT = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID,"suppressing")) ;
 	public static RegistryKey<Enchantment> SPELLBREAKINGENCHANT = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID,"spellbreaking")) ;
 	public static RegistryKey<Enchantment> BATTLEROUSE = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID,"battlerouse")) ;
+
+	/** Armor-bypassing physical damage type used only by Sneak Attack's double-crit branch. */
+	public static final RegistryKey<DamageType> SNEAK_ATTACK_DAMAGE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(MOD_ID,"sneak_attack")) ;
 
 	public static RegistryEntry<EntityAttribute> WARDING ;
 	public static RegistryEntry<EntityAttribute> CONVERTFROMFIRE ;
@@ -107,18 +104,8 @@ public class ReabsorptionInit implements ModInitializer {
 	public static RegistryEntry<EntityAttribute> PHYSIQUE;
 	public static RegistryEntry<EntityAttribute> FINESSE;
 	public static RegistryEntry<EntityAttribute> ATTUNEMENT;
-    public static RegistryEntry<EntityAttribute> VULNERABILITY;
-    public static RegistryEntry<EntityAttribute> VULNCRIT;
-    public static RegistryEntry<EntityAttribute> VULNCRITDAMAGE;
-    public static RegistryEntry<EntityAttribute> VULNARMOR;
-    public static RegistryEntry<EntityAttribute> VULNDAMAGE;
 
 	public static  RegistryEntry.Reference<StatusEffect> DISSOLUTIONEFFECT;
-    public static  RegistryEntry.Reference<StatusEffect> VULN;
-    public static  RegistryEntry.Reference<StatusEffect> CRITVULN;
-    public static  RegistryEntry.Reference<StatusEffect> ARMORVULN;
-    public static  RegistryEntry.Reference<StatusEffect> DAMAGEVULN;
-    public static  RegistryEntry.Reference<StatusEffect> CRITDAMAGEVULN;
 
 	public static final GameRules.Key<GameRules.BooleanRule> CLASSIC_ENERGYSHIELD = GameRuleRegistry.register("classicEnergyShield", GameRules.Category.PLAYER, GameRuleFactory.createBooleanRule(true));
 	static{
@@ -157,47 +144,8 @@ public class ReabsorptionInit implements ModInitializer {
 		config = AutoConfig.getConfigHolder(ServerConfigWrapper.class).getConfig().server;
 		DISSOLUTIONEFFECT = Registry.registerReference(Registries.STATUS_EFFECT,Identifier.of(MOD_ID,"dissolution"),new Dissolution(StatusEffectCategory.HARMFUL, 0xffff00)
 				.addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH,Identifier.of(MOD_ID,"dissolution"),-1, EntityAttributeModifier.Operation.ADD_VALUE));
-        VULN = Registry.registerReference(Registries.STATUS_EFFECT,Identifier.of(MOD_ID,"vuln"),new Vulnerability(StatusEffectCategory.HARMFUL,  Color.RAGE.toRGBA())
-                .addAttributeModifier(SpellEngineAttributes.DAMAGE_TAKEN.entry, Identifier.of(MOD_ID,"vuln"),0.2, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-
-        CRITVULN = Registry.registerReference(Registries.STATUS_EFFECT,Identifier.of(MOD_ID,"crit_chance_vuln"),new Vulnerability(StatusEffectCategory.HARMFUL,  Color.ELECTRIC.toRGBA()));
-        CRITDAMAGEVULN = Registry.registerReference(Registries.STATUS_EFFECT,Identifier.of(MOD_ID,"crit_damage_vuln"),new Vulnerability(StatusEffectCategory.HARMFUL,  Color.WHITE.toRGBA()));
-        DAMAGEVULN = Registry.registerReference(Registries.STATUS_EFFECT,Identifier.of(MOD_ID,"damage_vuln"),new Vulnerability(StatusEffectCategory.HARMFUL,  Color.RED.toRGBA())
-                .addAttributeModifier(SpellEngineAttributes.DAMAGE_TAKEN.entry, Identifier.of(MOD_ID,"damage_vuln"),0.6, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-        ARMORVULN = Registry.registerReference(Registries.STATUS_EFFECT,Identifier.of(MOD_ID,"armor_vuln"),new Vulnerability(StatusEffectCategory.HARMFUL, Color.POISON_LIGHT.toRGBA())
-                .addAttributeModifier(EntityAttributes.GENERIC_ARMOR,Identifier.of(MOD_ID,"armor_vuln"),-0.6, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-
 
         ItemInit.register();
-        CombatEvents.PLAYER_ANY_ATTACK.register(args -> {
-            if(args.target() instanceof LivingEntity living && args.player() instanceof PlayerEntity player){
-                var chance =(double)( player.getAttributeInstance(VULNERABILITY) != null ? Calculations.vuln(player,VULNERABILITY ):0);
-                if(living.getStatusEffects().stream().noneMatch(effectInstance -> effectInstance.getEffectType().value() instanceof Vulnerability) && !living.hasStatusEffect(VULN) && player.getRandom().nextFloat() < chance){
-                    living.addStatusEffect(new StatusEffectInstance(VULN,20*8,0,false,false,false));
-                }
-                if(living.hasStatusEffect(VULN) && living.getStatusEffect(VULN) instanceof  StatusEffectInstance statusEffect && statusEffect.isDurationBelow(80)) {
-                    var armorvuln = player.getAttributeInstance(VULNERABILITY) != null ? Calculations.vuln(player, VULNARMOR) : 0;
-                    var chancevuln = player.getAttributeInstance(VULNERABILITY) != null ? Calculations.vuln(player, VULNCRIT) : 0;
-                    var critdamagevuln = player.getAttributeInstance(VULNERABILITY) != null ? Calculations.vuln(player, VULNCRITDAMAGE) : 0;
-                    var damagevuln = player.getAttributeInstance(VULNERABILITY) != null ? Calculations.vuln(player, VULNDAMAGE) : 0;
-                    HashMap<Double, RegistryEntry<StatusEffect>> attributes = new HashMap<>();
-                    attributes.put(armorvuln, ARMORVULN);
-                    attributes.put(critdamagevuln, CRITVULN);
-                    attributes.put(damagevuln, DAMAGEVULN);
-                    attributes.put(chancevuln, CRITVULN);
-                    boolean bool = false;
-                    for (double d : attributes.keySet()) {
-                        if (d > living.getRandom().nextFloat()) {
-                            living.addStatusEffect(new StatusEffectInstance(attributes.get(d), 40, 0, false, false));
-                            bool = true;
-                        }
-                    }
-                    if (bool) {
-                        living.removeStatusEffect(VULN);
-                    }
-                }
-            }
-        });
 		CustomTrades.registerCustomTrades();
 		LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
 			// Let's only modify built-in loot tables and leave data pack loot tables untouched by checking the source.
@@ -249,19 +197,6 @@ public class ReabsorptionInit implements ModInitializer {
 		((PHYSIQUE.value())).setTracked(true);
 		((FINESSE.value())).setTracked(true);
 		((ATTUNEMENT.value())).setTracked(true);
-        SpellPower.vulnerabilitySources.add(vulnerabilityQuery -> {
-            var entity = vulnerabilityQuery.entity();
-            var nullVuln = new SpellPower.Vulnerability(0,
-                    0,
-                    0);
-            var vuln = entity instanceof LivingEntity livingEntity?
-                    new SpellPower.Vulnerability(0,
-                            livingEntity.getStatusEffect(CRITVULN) != null ? (livingEntity.getStatusEffect(CRITVULN).getAmplifier() + 1) * 1F : 0F,
-                            livingEntity.getStatusEffect(CRITDAMAGEVULN) != null ? (livingEntity.getStatusEffect(CRITDAMAGEVULN).getAmplifier() + 1) * 0.8F : 0F) :
-                                  nullVuln  ;
-            return List.of(vuln);
-        });
-
 		SpellSchools.FROST.addSource(SpellSchool.Trait.POWER, SpellSchool.Apply.ADD,queryArgs -> {
 			double add = 0;
 			if(queryArgs.entity().getAttributes() != null){
@@ -287,7 +222,7 @@ public class ReabsorptionInit implements ModInitializer {
 			}
 			return add;});
 		LOGGER.info("Hello Fabric world!");
-        CustomImpacts.register();
+		SpellHandlers.registerCustomImpact(Identifier.of(MOD_ID, "sneak_attack"), SneakAttackHandler::onImpact);
 
 	}
 	//Code Credit to Pufferfish

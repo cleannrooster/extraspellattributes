@@ -3,11 +3,7 @@
   "values": [
     "extraspellattributes:goldquartzring",
     "extraspellattributes:netheritediamondring",
-    "extraspellattributes:defiancering",
-    "extraspellattributes:rose_signet",
-    "extraspellattributes:blood_signet",
-    "extraspellattributes:sand_signet",
-    "extraspellattributes:rust_signet"
+    "extraspellattributes:defiancering"
 
   ]
 }

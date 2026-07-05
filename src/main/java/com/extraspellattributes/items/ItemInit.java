@@ -16,10 +16,6 @@ import net.minecraft.util.Identifier;
 public class ItemInit {
 
     public static ItemGroup extraspellattributes;
-    public static Item ROSE_SIGNET;
-    public static Item BLOOD_SIGNET;
-    public static Item SAND_SIGNET;
-    public static Item RUST_SIGNET;
 
     public static Item GOLDQUARTZRING;
 
@@ -44,14 +40,6 @@ public class ItemInit {
         Registry.register(Registries.ITEM_GROUP, KEY, extraspellattributes);
 
         addItemToGroup(GOLDQUARTZRING);
-        ROSE_SIGNET = registerItem("rose_signet",new Signet( new Item.Settings().maxCount(1),ReabsorptionInit.config.rose,ReabsorptionInit.VULNDAMAGE));
-        addItemToGroup(ROSE_SIGNET);
-        RUST_SIGNET = registerItem("rust_signet",new Signet(new Item.Settings().maxCount(1),ReabsorptionInit.config.rust,ReabsorptionInit.VULNARMOR));
-        addItemToGroup(RUST_SIGNET);
-        SAND_SIGNET = registerItem("sand_signet",new Signet(new Item.Settings().maxCount(1),ReabsorptionInit.config.sand,ReabsorptionInit.VULNCRIT));
-        addItemToGroup(SAND_SIGNET);
-        BLOOD_SIGNET = registerItem("blood_signet",new Signet(new Item.Settings().maxCount(1),ReabsorptionInit.config.blood,ReabsorptionInit.VULNCRITDAMAGE));
-        addItemToGroup(BLOOD_SIGNET);
 
         NETHERITEDIAMOND = registerItem("netheritediamondring",new Ring(new Item.Settings().maxCount(1),ReabsorptionInit.config.netherite_absorption_ring_mod));
         addItemToGroup(NETHERITEDIAMOND);

@@ -3,7 +3,6 @@ package com.extraspellattributes.mixin;
 import com.extraspellattributes.Calculations;
 import com.extraspellattributes.PlayerInterface;
 import com.extraspellattributes.api.Sign;
-import com.extraspellattributes.api.SneakAttackable;
 import com.extraspellattributes.interfaces.RecoupLivingEntityInterface;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.block.entity.SmokerBlockEntity;
@@ -15,10 +14,6 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registry;
@@ -29,16 +24,7 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
-import net.spell_engine.api.spell.ExternalSpellSchools;
-import net.spell_engine.api.spell.Spell;
-import net.spell_engine.api.spell.registry.SpellRegistry;
-import net.spell_engine.internals.SpellHelper;
-import net.spell_engine.internals.casting.SpellCasterEntity;
-import net.spell_engine.internals.container.SpellContainerSource;
-import net.spell_engine.internals.target.SpellTarget;
 import net.spell_engine.utils.WorldScheduler;
-import net.spell_power.api.SpellPower;
-import net.spell_power.api.SpellSchool;
 import net.spell_power.mixin.DamageSourcesAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -49,13 +35,12 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.extraspellattributes.ReabsorptionInit.*;
 
 @Mixin(LivingEntity.class)
-public class LivingEntityMixin implements SneakAttackable {
+public class LivingEntityMixin {
 
 	@Shadow
 	private DefaultedList<ItemStack> syncedHandStacks;
@@ -306,48 +291,6 @@ public class LivingEntityMixin implements SneakAttackable {
 		info.getReturnValue().add(ENDURANCE);
 		info.getReturnValue().add(FORTITUDE);
 		info.getReturnValue().add(DISSOLUTION);
-        info.getReturnValue().add(VULNCRIT);
-        info.getReturnValue().add(VULNDAMAGE);
-        info.getReturnValue().add(VULNARMOR);
-        info.getReturnValue().add(VULNCRITDAMAGE);
-        info.getReturnValue().add(VULNERABILITY);
 
 	}
-    public boolean isVulnerable(LivingEntity mob) {
-        return mob.hasStatusEffect(VULN);
-    }
-    private boolean doSneakAttack(LivingEntity entity,  boolean should, SpellSchool school) {
-        if(!should) return false;
-        if (!((Object)this instanceof LivingEntity living)) return false;
-        var spellOptional = school.equals(ExternalSpellSchools.PHYSICAL_RANGED) ? SpellRegistry.from(living.getWorld()).getEntry(Identifier.of(MOD_ID,"gouge_ranged")) :  SpellRegistry.from(living.getWorld()).getEntry(Identifier.of(MOD_ID,"gouge"));
-        if(spellOptional.isEmpty()) return false;
-        var spellRef = spellOptional.get();
-        if(!(entity instanceof PlayerEntity player)) return false;
-        var caster = (SpellCasterEntity) player;
-        if (caster.getCooldownManager().isCoolingDown(spellRef)) return false;
-        var source = school.equals(ExternalSpellSchools.PHYSICAL_RANGED) ? SpellContainerSource.getFirstSourceOfSpell(Identifier.of(MOD_ID,"try_gouge_ranged"),player) :  SpellContainerSource.getFirstSourceOfSpell(Identifier.of(MOD_ID,"try_gouge"),player);
-        var newSource = new SpellContainerSource.SourcedContainer("source_vulnerability",null,source.container());
-        SpellHelper.imposeCooldown(player,newSource ,spellRef,1.0F);
-        return spellOptional.filter(spellReference -> SpellHelper.performImpacts(living.getWorld(), entity, living, living, spellReference, spellReference.value().impacts,
-                new SpellHelper.ImpactContext(1.0F, 1.0F, living.getPos(), SpellPower.getSpellPower(school, entity), SpellTarget.FocusMode.DIRECT, 0))).isPresent();
-    }
-    @Override
-    public boolean processSneakAttack(LivingEntity attacker, SpellSchool school) {
-        return doSneakAttack(attacker,shouldSneakAttack(attacker), school);
-    }
-    private boolean shouldSneakAttack(Entity attacker) {
-        if (!((Object)this instanceof LivingEntity living)) return false;
-        if (!(living instanceof MobEntity mob)) return false;
-        if (Objects.isNull(attacker)) return false;
-        if(isVulnerable(mob)) return true;
-        if (mob instanceof HostileEntity) {
-            return Objects.isNull( mob.getTarget()) || !Objects.equals(mob.getTarget(), attacker);
-        }
-        if (mob instanceof PassiveEntity passive) {
-            if (passive.isPanicking()) return true;
-            return !Objects.isNull( mob.getTarget())
-                    && !Objects.equals(mob.getTarget(), attacker);
-        }
-        return false;
-    }
 }

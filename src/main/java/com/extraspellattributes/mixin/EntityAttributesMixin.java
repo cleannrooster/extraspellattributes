@@ -43,11 +43,6 @@ public class EntityAttributesMixin {
         FORTITUDE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"fortitude"),new ClampedEntityAttribute("attribute.name.extraspellattributes.fortitude",0,0,2048));
         ENDURANCE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"endurance"),new DynamicAttribute("attribute.name.extraspellattributes.endurance"));
         DISSOLUTION = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"dissolution"),new ClampedEntityAttribute("attribute.name.extraspellattributes.dissolution",0,0,2048));
-        VULNERABILITY = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"vulnerability"),new DynamicAttribute("attribute.name.extraspellattributes.vulnerability"));
-        VULNARMOR = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"vulnerability_armor"),new DynamicAttribute("attribute.name.extraspellattributes.vulnerability_armor"));
-        VULNCRIT = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"vulnerability_critchance"),new DynamicAttribute("attribute.name.extraspellattributes.vulnerability_critchance"));
-        VULNCRITDAMAGE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"vulnerability_critdamage"),new DynamicAttribute("attribute.name.extraspellattributes.vulnerability_critdamage"));
-        VULNDAMAGE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"vulnerability_damage"),new DynamicAttribute("attribute.name.extraspellattributes.vulnerability_damage"));
 
     }
 }

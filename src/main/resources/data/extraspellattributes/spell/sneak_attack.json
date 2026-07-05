@@ -1,0 +1,57 @@
+{
+  "school": "spell_power:physical_melee",
+  "range": 4.0,
+  "range_mechanic": "MELEE",
+  "tier": 1,
+  "learn": {},
+  "active": {
+    "cast": {
+      "duration": 0.1,
+      "animation": {
+        "id": "spell_engine:weapon_thrust_full"
+      }
+    }
+  },
+  "target": {
+    "type": "AIM",
+    "aim": {
+      "sticky": true
+    }
+  },
+  "deliver": {
+    "type": "DIRECT"
+  },
+  "impacts": [
+    {
+      "action": {
+        "type": "CUSTOM",
+        "damage": {
+          "spell_power_coefficient": 1.0,
+          "knockback": 0.0
+        },
+        "custom": {
+          "handler": "extraspellattributes:sneak_attack",
+          "intent": "HARMFUL"
+        }
+      },
+      "particles": [
+        {
+          "particle_id": "crit",
+          "origin": "CENTER",
+          "shape": "SPHERE",
+          "count": 8.0,
+          "min_speed": 0.1,
+          "max_speed": 0.3
+        }
+      ],
+      "sound": {
+        "id": "minecraft:entity.player.attack.crit"
+      }
+    }
+  ],
+  "cost": {
+    "cooldown": {
+      "duration": 6.0
+    }
+  }
+}
