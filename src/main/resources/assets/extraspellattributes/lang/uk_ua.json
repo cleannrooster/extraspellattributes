@@ -1,0 +1,54 @@
+{
+  "attribute.name.extraspellattributes.reabsorption": "Реабсорбція",
+  "attribute.name.extraspellattributes.converttofire": "Шкода від атаки, отримана як Сила Вогню ",
+  "attribute.name.extraspellattributes.convertfromfire": "Атрибут Сили Вогню, отриманий як Шкода від атаки",
+  "attribute.name.extraspellattributes.converttoarcane": "Шкода від атаки, отримана як Таємна Сила ",
+  "attribute.name.extraspellattributes.convertfromarcane": "Атрибут Таємної Сили, отриманий як Шкода від атаки",
+  "attribute.name.extraspellattributes.converttofrost": "Шкода від атаки, отримана як Сила Морозу ",
+  "attribute.name.extraspellattributes.convertfromfrost": "Атрибут Сили Морозу, отриманий як Шкода від атаки",
+  "attribute.name.extraspellattributes.converttoheal": "Шкода від атаки, отримана як Сила Зцілення ",
+  "attribute.name.extraspellattributes.glancingblow": "Шанс пом'якшити отриману шкоду на 35%",
+  "attribute.name.extraspellattributes.spellsuppression": "Шанс, що отримані закляття завдадуть на 50% менше шкоди",
+  "attribute.name.extraspellattributes.serenity": "Шанс, що вдвічі послаблені закляття натомість не завдадуть шкоди (Макс. 75%)",
+  "attribute.name.extraspellattributes.endu": "Витривалість",
+  "attribute.name.extraspellattributes.defi": "Ігнорування шкоди (зі спадною віддачею)",
+  "enchantment.extraspellattributes.suppression": "Придушення",
+  "enchantment.extraspellattributes.defiance": "Непокора",
+  "enchantment.extraspellattributes.warding": "Оберіг",
+  "enchantment.extraspellattributes.spellbreak": "Руйнування заклять",
+  "enchantment.extraspellattributes.glancingblow": "Ухилення",
+  "enchantment.extraspellattributes.battlerouse": "Бойовий запал",
+  "enchantment.extraspellattributes.suppression.desc": "Збільшує ваш шанс придушити шкоду від заклять на 4% за рівень. Придушені закляття завдають на 50% менше шкоди.",
+  "enchantment.extraspellattributes.defiance.desc": "+0.25 ігнорування отриманої шкоди за рівень. Має спадну віддачу.",
+  "enchantment.extraspellattributes.warding.desc": "+1 до Реабсорбції за рівень",
+  "enchantment.extraspellattributes.spellbreak.desc": "Збільшує шанс проігнорувати шкоду від придушених заклять на 4% за рівень. Максимум 75%.",
+  "enchantment.extraspellattributes.glancingblow.desc": "Збільшує шанс отримати ковзний удар на 4% за рівень. Ковзний удар завдає на 35% менше шкоди.",
+  "enchantment.extraspellattributes.battlerouse.desc": "+4% завданої вашому здоров'ю шкоди відновлюється протягом наступних чотирьох секунд за рівень.",
+
+  "attribute.name.extraspellattributes.determination": "Шкода здоров'ю, що відновлюється як здоров'я протягом наступних 4 секунд",
+
+  "desc.extraspellattributes.glance": "Ковзний удар завдає лише 65% шкоди. Ви не можете отримувати ковзні удари від шкоди, що не походить від сутностей (наприклад, від вогню чи отрути).",
+
+  "desc.extraspellattributes.supp": "Придушене закляття завдає лише 50% шкоди.",
+
+  "desc.extraspellattributes.defi": "Ваша Непокора віднімає своє значення від загальної шкоди, яку ви отримуєте. Непокора має спадну віддачу.",
+  "desc.extraspellattributes.acro":"Ваш % Руйнування заклять — це шанс, що придушене закляття натомість не завдасть шкоди. Руйнування заклять обмежується 75%.",
+  "desc.extraspellattributes.determination":"Ваш % Рішучості — це частка втраченого здоров'я, яка відновлюється протягом наступних чотирьох секунд.",
+  "desc.extraspellattributes.reabsorption":"Ви поступово відновлюєте Поглинання (Жовті серця) до максимальної Реабсорбції, якщо не отримуєте ударів протягом 4 секунд.",
+
+  "itemGroup.extraspellattributes.general": "Аксесуари Extra RPG Attributes",
+  "item.extraspellattributes.netheritediamondring": "Незеритово-діамантове кільце",
+  "item.extraspellattributes.goldquartzring": "Золото-кварцове кільце",
+  "item.extraspellattributes.netheritediamondamulet": "Незеритово-діамантовий амулет",
+  "item.extraspellattributes.goldquartzamulet": "Золото-кварцовий амулет",
+  "item.extraspellattributes.martialbracer": "Черепаховий наруч",
+  "item.extraspellattributes.arcanebracer": "Аметистовий наруч",
+  "item.extraspellattributes.nonbelieversamulet": "Амулет невірянина",
+  "item.extraspellattributes.turtlegirdle": "Черепаховий пояс",
+  "item.extraspellattributes.defiancering": "Кільце слави",
+  "item.extraspellattributes.undyingsoul": "Невмируща душа"
+
+
+
+
+}
