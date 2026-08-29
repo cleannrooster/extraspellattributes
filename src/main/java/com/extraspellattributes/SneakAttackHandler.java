@@ -14,9 +14,15 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.spell_engine.api.spell.Spell;
 import net.spell_engine.api.spell.event.SpellHandlers;
+import net.spell_engine.api.spell.fx.ParticleGroup;
+import net.spell_engine.api.spell.fx.ParticleGroupBuilder;
+import net.spell_engine.client.util.Color;
 import net.spell_engine.compat.CriticalStrikeCompat;
 import net.spell_engine.entity.DamageSourceExtension;
-import net.spell_engine.internals.SpellHelper;
+import net.spell_engine.fx.ParticleHelper;
+import net.spell_engine.fx.SpellEngineParticles;
+import net.spell_engine.fx.SpellEngineSounds;
+import net.spell_engine.internals.SpellExecution;
 import net.spell_engine.internals.target.SpellTarget;
 import net.spell_power.api.SpellPower;
 import net.spell_power.api.SpellDamageSource;
@@ -40,7 +46,7 @@ public final class SneakAttackHandler {
                                                       SpellPower.Result power,
                                                       LivingEntity caster,
                                                       @Nullable Entity target,
-                                                      SpellHelper.ImpactContext context) {
+                                                      SpellExecution.ImpactContext context) {
         if (!(target instanceof LivingEntity living)) {
             return new SpellHandlers.ImpactResult(false, false);
         }
@@ -65,7 +71,7 @@ public final class SneakAttackHandler {
             amount *= power.criticalDamage();
         }
         amount *= coefficientOf(spellEntry);
-        amount *= context.total();
+        amount *= context.total(spellEntry);
         if (context.isChanneled()) {
             amount *= SpellPower.getHaste(caster, school);
         }
@@ -87,21 +93,47 @@ public final class SneakAttackHandler {
         ((DamageSourceExtension) damageSource).setSpellIndirect(context.focusMode() != SpellTarget.FocusMode.DIRECT);
         living.damage(damageSource, (float) amount);
 
-        // Conditional, runtime-only feedback (cannot live in the spell JSON because it depends on state).
+        // Mutually exclusive runtime feedback. This cannot live in the spell JSON because
+        // the correct effect depends on concealment and the natural critical roll.
         if (caster.getWorld() instanceof ServerWorld serverWorld) {
-            if (concealed) {
-                serverWorld.spawnParticles(ParticleTypes.SMOKE,
-                        living.getX(), living.getBodyY(0.5), living.getZ(), 12, 0.25, 0.4, 0.25, 0.02);
-            }
             if (ignoreArmor) {
-                serverWorld.spawnParticles(ParticleTypes.ENCHANTED_HIT,
-                        living.getX(), living.getBodyY(0.6), living.getZ(), 10, 0.2, 0.3, 0.2, 0.1);
-                serverWorld.playSound(null, living.getBlockPos(), SoundEvents.ITEM_TRIDENT_HIT_GROUND,
-                        SoundCategory.PLAYERS, 0.7F, 1.6F);
+                playCritFeedback(serverWorld, living);
+            } else if (concealed) {
+                playStrongFeedback(serverWorld, living);
+            } else {
+                playWeakFeedback(serverWorld, living);
             }
         }
 
         return new SpellHandlers.ImpactResult(true, finalCritical);
+    }
+
+    private static void playWeakFeedback(ServerWorld world, LivingEntity target) {
+        world.spawnParticles(ParticleTypes.SWEEP_ATTACK,
+                target.getX(), target.getBodyY(0.5), target.getZ(), 2, 0.15, 0.2, 0.15, 0.0);
+        world.playSound(null, target.getBlockPos(), SoundEvents.ENTITY_PLAYER_ATTACK_WEAK,
+                SoundCategory.PLAYERS, 0.65F, 1.0F);
+    }
+
+    private static void playStrongFeedback(ServerWorld world, LivingEntity target) {
+        playConcealedCritFeedback(world, target, Color.RED);
+    }
+
+    private static void playCritFeedback(ServerWorld world, LivingEntity target) {
+        playConcealedCritFeedback(world, target, Color.ELECTRIC);
+    }
+
+    private static void playConcealedCritFeedback(ServerWorld world, LivingEntity target, Color skullColor) {
+        var blood = ParticleGroupBuilder.of(SpellEngineParticles.dripping_blood)
+                .batch(b -> b.shape(ParticleGroup.Shape.SPHERE).count(18).speed(0.12F, 0.35F));
+        var skull = ParticleGroupBuilder.magic(SpellEngineParticles.magic_skull, ParticleGroup.Motion.BURST)
+                .color(skullColor.toRGBA())
+                .scale(1.15F)
+                .batch(b -> b.shape(ParticleGroup.Shape.SPHERE).count(8).speed(0.1F, 0.3F));
+
+        ParticleHelper.sendBatches(target, java.util.List.of(blood, skull));
+        world.playSound(null, target.getBlockPos(), SpellEngineSounds.SIGNAL_SPELL_CRIT.soundEvent(),
+                SoundCategory.PLAYERS, 1.0F, 1.0F);
     }
 
     @Nullable

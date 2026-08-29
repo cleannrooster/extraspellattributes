@@ -14,6 +14,16 @@
         "attribute": "extraspellattributes:endurance",
         "id": "extraspellattributes:endurance_enchantment",
         "operation": "add_value"
+      },
+      {
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 0.2,
+          "per_level_above_first": 0.2
+        },
+        "attribute": "extraspellattributes:fortitude",
+        "id": "extraspellattributes:endurance_enchantment_2",
+        "operation": "add_value"
       }
     ]
   },

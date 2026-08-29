@@ -5,7 +5,6 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.spell_engine.api.spell.Spell;
-import net.spell_engine.internals.SpellHelper;
 import org.jetbrains.annotations.Nullable;
 
 public class SpellStatusEffect extends StatusEffect {

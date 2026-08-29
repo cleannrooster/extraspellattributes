@@ -72,6 +72,7 @@ public class ReabsorptionInit implements ModInitializer {
 	public static RegistryKey<Enchantment> SUPPRESSINGENCHANT = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID,"suppressing")) ;
 	public static RegistryKey<Enchantment> SPELLBREAKINGENCHANT = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID,"spellbreaking")) ;
 	public static RegistryKey<Enchantment> BATTLEROUSE = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID,"battlerouse")) ;
+	public static final RegistryKey<Enchantment> GUERILLA_ENCHANT = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID,"guerilla"));
 
 	/** Armor-bypassing physical damage type used only by Sneak Attack's double-crit branch. */
 	public static final RegistryKey<DamageType> SNEAK_ATTACK_DAMAGE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(MOD_ID,"sneak_attack")) ;
@@ -223,6 +224,7 @@ public class ReabsorptionInit implements ModInitializer {
 			return add;});
 		LOGGER.info("Hello Fabric world!");
 		SpellHandlers.registerCustomImpact(Identifier.of(MOD_ID, "sneak_attack"), SneakAttackHandler::onImpact);
+		GuerillaHandler.register();
 
 	}
 	//Code Credit to Pufferfish
