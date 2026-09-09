@@ -35,6 +35,6 @@
 		"spellbladenext": "<=1.8"
 	},
 	"suggests": {
-		"another-mod": "*"
+		"rogues": "*"
 	}
 }

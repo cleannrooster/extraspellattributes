@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.attribute.*;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -34,6 +35,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import net.spell_engine.api.spell.ExternalSpellSchools;
+import net.spell_engine.api.spell.event.SpellHandlers;
 import net.spell_power.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +46,14 @@ public class ReabsorptionInit {
 	// That way, it's clear which mod wrote info, warnings, and errors.
     public static final Logger LOGGER = LoggerFactory.getLogger("extraspellattributes");
 	public static final String MOD_ID = "extraspellattributes";
+
+	public static final RegistryKey<Enchantment> GUERILLA_ENCHANT = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID,"guerilla"));
+	public static final RegistryKey<Enchantment> MAGEBANE_ENCHANT = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID,"magebane"));
+	public static final RegistryKey<Enchantment> IMBALANCED_GUARD_ENCHANT = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(MOD_ID,"imbalanced_guard"));
+
+	/** Armor-bypassing physical damage type used only by Sneak Attack's double-crit branch. */
+	public static final RegistryKey<DamageType> SNEAK_ATTACK_DAMAGE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(MOD_ID,"sneak_attack"));
+
 
 
 
@@ -112,6 +122,8 @@ public class ReabsorptionInit {
 				add = SpellPower.getSpellPower(ExternalSpellSchools.PHYSICAL_MELEE,queryArgs.entity()).baseValue()*(-1+Calculations.converttoHeal(queryArgs.entity()));
 			}
 			return add;});
+		SpellHandlers.registerCustomImpact(Identifier.of(MOD_ID, "sneak_attack"), SneakAttackHandler::onImpact);
+		GuerillaHandler.register();
 		LOGGER.info("Hello Fabric world!");
 
 	}

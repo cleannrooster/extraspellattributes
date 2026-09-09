@@ -1,24 +1,25 @@
 {
-	"required": true,
-	"package": "com.cleannrooster.extraspellattributes.mixin",
-	"compatibilityLevel": "JAVA_17",
-	"mixins": [
-		"PlayerMixin",
-		"LivingEntityMixin",
-		"AttributeMixin",
-		"ItemstackMixin",
-		"LivingEntityRecoupMixin",
-		"EntityAttributesMixin",
-		"LivingEntityRecoupAbsorbMixin",
-		"LivingEntityCullMixin",
-		"EntityAttributeInstanceMixin",
-		"EntityAttributeInstanceInvoker",
-		"SpellTriggersMixin"
-	],
-	"client": [
-		"InGameHudMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	}
+  "required": true,
+  "package": "com.cleannrooster.extraspellattributes.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [
+    "InGameHudMixin"
+  ],
+  "mixins": [
+    "AttributeMixin",
+    "EntityAttributeInstanceInvoker",
+    "EntityAttributeInstanceMixin",
+    "EntityAttributesMixin",
+    "HungerManagerMixin",
+    "ItemstackMixin",
+    "LivingEntityCullMixin",
+    "LivingEntityMixin",
+    "LivingEntityRecoupAbsorbMixin",
+    "LivingEntityRecoupMixin",
+    "PlayerMixin",
+    "SpellAssignmentsMixin"],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }

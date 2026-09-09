@@ -1,13 +1,15 @@
 {
   "replace": false,
   "values": [
-    "extraspellattributes:defiance",
     "extraspellattributes:glancingblow",
     "extraspellattributes:recoup",
-    "extraspellattributes:spellbreak",
     "extraspellattributes:suppression",
     "extraspellattributes:warding",
-    "extraspellattributes:aureate"
-
+    "extraspellattributes:aureate",
+    "extraspellattributes:fortified",
+    "extraspellattributes:enduring",
+    "extraspellattributes:guerilla",
+    "extraspellattributes:magebane",
+    "extraspellattributes:imbalanced_guard"
   ]
 }

@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:invisibility",
+    {
+      "id": "rogues:stealth",
+      "required": false
+    },
+    {
+      "id": "rogues:stealth_speed",
+      "required": false
+    }
+
+  ]
+}

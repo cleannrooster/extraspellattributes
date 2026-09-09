@@ -6,6 +6,9 @@ import com.cleannrooster.extraspellattributes.PlayerInterface;
 import com.cleannrooster.extraspellattributes.api.Sign;
 import com.cleannrooster.extraspellattributes.interfaces.RecoupLivingEntityInterface;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.entity.DamageUtil;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -32,6 +35,8 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static com.cleannrooster.extraspellattributes.DynamicAttribute.*;
+import static com.cleannrooster.extraspellattributes.ReabsorptionInit.IMBALANCED_GUARD_ENCHANT;
+import static com.cleannrooster.extraspellattributes.ReabsorptionInit.MAGEBANE_ENCHANT;
 import static com.cleannrooster.extraspellattributes.Effects.DISSOLUTIONEFFECT;
 import static com.cleannrooster.extraspellattributes.Effects.INEVITABILITYEFFECT;
 
@@ -69,43 +74,27 @@ public class LivingEntityMixin {
 				}
 			}
 			if (living.age - living.getLastAttackedTime() > 80 || living.age - brittleTime < 80) {
-				if (living.getAttributeValue(BRITTLE) > 100) {
-					amount *= (float) Calculations.brittlenegative(living);
+				if (Calculations.brittle(living) > 1) {
+					amount *= (float) Math.max(0, Calculations.brittlenegative(living));
 				}
 				if(living.age - living.getLastAttackedTime() > 80){
 					this.brittleTime = living.age;
 				}
 			} else {
-				if (living.getAttributeValue(BRITTLE) > 100) {
+				if (Calculations.brittle(living) > 1) {
 					amount *= (float) (Calculations.brittle(living));
 
 				}
 			}
 			if (living.getAttributeInstance(GLANCINGBLOW) != null && source.getAttacker() != null) {
-				double glancingchance = Calculations.glancingBlow(living) - 1;
-				if (living.getRandom().nextFloat() < glancingchance) {
-					amount *= 0.65F;
-				}
-
-
+				amount *= (float) Math.pow(0.65, esa$overflowProcs(living, Calculations.glancingBlow(living) - 1));
 			}
-
-			Registry<DamageType> registry = ((DamageSourcesAccessor) living.getDamageSources()).getRegistry();
 
 			if (living.getAttributeInstance(SPELLSUPPRESS) != null &&  source.getTypeRegistryEntry().isIn(TagKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of("c", "is_magic")))) {
-				double suppresschance = Calculations.spellSuppress(living) - 1;
-
-				if (living.getRandom().nextFloat() < suppresschance) {
-					amount *= 0.5F;
-					double acro = Calculations.spellbreak(living) - 1;
-					if (living.getRandom().nextFloat() < acro) {
-						amount *= 0;
-					}
-				}
+				amount *= (float) Math.pow(0.5, esa$overflowProcs(living, Calculations.spellSuppress(living) - 1));
 			}
-			if(Calculations.fortitude(living) > living.getMaxHealth()/5F ||
-					Calculations.endurance(living) < 10F/(15F) ){
-				float damageAbove = (float) Math.max(0,living.getAbsorptionAmount() + living.getHealth() - Calculations.fortitude(living));
+			if(Calculations.endurance(living) < 10.0/15.0){
+				float damageAbove = Math.max(0,living.getAbsorptionAmount() + living.getHealth() - living.getMaxHealth()/5F);
 				if(amount > damageAbove) {
 					float damageBelow = (float) ((amount - damageAbove) * Calculations.endurance(living));
 					if (damageBelow > 0) {
@@ -119,6 +108,20 @@ public class LivingEntityMixin {
 
 		return amount;
 	}
+
+	/** PoE2-style overflow: floor(chance) guaranteed procs, fractional part rolls for one more. */
+	@Unique
+	private static int esa$overflowProcs(LivingEntity living, double chance) {
+		if (chance <= 0) {
+			return 0;
+		}
+		int procs = (int) chance;
+		if (living.getRandom().nextFloat() < chance - procs) {
+			procs++;
+		}
+		return procs;
+	}
+
 	@Inject(at = @At("RETURN"), method = "getHealth", cancellable = true)
 	public void getHealthDissolution(CallbackInfoReturnable<Float> cir) {
 
@@ -176,10 +179,8 @@ public class LivingEntityMixin {
 
 	protected float applyArmorToDamageReab(float value, DamageSource source, float amount) {
 		LivingEntity living = (LivingEntity) (Object) this;
-		double imbalanced = Calculations.imbalanced(living);
-		double magebane = Calculations.magebane(living);
 
-		if(magebane > 1){
+		if(esa$hasEnchantFlag(living, MAGEBANE_ENCHANT)){
 
 			if(source.getTypeRegistryEntry().getIdAsString().contains("spell_power")){
 			living.damageArmor(source, value);
@@ -187,21 +188,20 @@ public class LivingEntityMixin {
 			}
 			value *= 1.2F;
 		}
-		if(imbalanced > 1){
+		if(esa$hasEnchantFlag(living, IMBALANCED_GUARD_ENCHANT)){
 			if (!source.isIn(DamageTypeTags.BYPASSES_ARMOR)) {
 				living.damageArmor(source, amount);
 				value *= 3;
 				value = DamageUtil.getDamageLeft(living, value, source, (float) living.getArmor(), (float) living.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS));
 			}
 		}
-		if (!source.isIn(DamageTypeTags.BYPASSES_ARMOR)) {
-
-			if (living.getAttributeInstance(DEFIANCE) != null && amount > 1) {
-
-				value -= (float) Math.pow(Calculations.defiance(living), 0.5);
-			}
-		}
 		return value;
+	}
+
+	@Unique
+	private static boolean esa$hasEnchantFlag(LivingEntity living, RegistryKey<Enchantment> key) {
+		var enchantment = living.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(key).orElse(null);
+		return enchantment != null && EnchantmentHelper.getEquipmentLevel(enchantment, living) > 0;
 	}
 
 	@Unique

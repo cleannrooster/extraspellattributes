@@ -97,8 +97,10 @@ public class PlayerMixin implements PlayerInterface, RecoupLivingEntityInterface
             double toRecover = 0;
             for (RecoupInstances.RecoupInstanceHealth instance : this.recoupInstancesHealth) {
                 if(instance.remainingduration > 0) {
-                    toRecover += instance.value / (instance.duration / 8);
-                    instance.remainingvalue -= toRecover;
+                    double remainingPayments = Math.ceil(instance.remainingduration / 10.0);
+                    double payment = instance.remainingvalue / remainingPayments;
+                    toRecover += payment;
+                    instance.remainingvalue -= payment;
                 }
                 instance.remainingduration -= 10;
             }
@@ -106,9 +108,10 @@ public class PlayerMixin implements PlayerInterface, RecoupLivingEntityInterface
             double toRecoverAbs = 0;
             for (RecoupInstances.RecoupInstanceAbsorption instance : this.recoupInstancesAbsorption) {
                 if(instance.remainingduration > 0) {
-
-                    toRecoverAbs += instance.value / (instance.duration / 8);
-                    instance.remainingvalue -= toRecoverAbs;
+                    double remainingPayments = Math.ceil(instance.remainingduration / 10.0);
+                    double payment = instance.remainingvalue / remainingPayments;
+                    toRecoverAbs += payment;
+                    instance.remainingvalue -= payment;
                 }
                 instance.remainingduration -= 10;
             }

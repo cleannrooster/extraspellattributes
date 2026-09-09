@@ -4,7 +4,7 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
-@Config(name = "server_v3")
+@Config(name = "server_v4")
 public class ServerConfig  implements ConfigData {
     public ServerConfig(){}
     @Comment("Reabsorption regeneration factor (proportion of 25% of maximum per second) - Default: 1.0")
@@ -21,8 +21,8 @@ public class ServerConfig  implements ConfigData {
     @Comment("Registration of turtle girdle")
     public boolean turtle_girdle = true;
 
-    @Comment("Mod of turtle girdle")
-    public float turtle_girdle_mod = 1F;
+    @Comment("Mod of turtle girdle (Fortitude points; each is +10% saturation healing)")
+    public float turtle_girdle_mod = 4F;
     @Comment("Registration of arcane bracer")
     public boolean arcane_bracer = true;
     @Comment("Mod of arcane bracer")
@@ -30,8 +30,8 @@ public class ServerConfig  implements ConfigData {
     @Comment("Registration of nonbeliever amulet")
     public boolean nonbeliever = true;
 
-    @Comment("Mod of nonbeliever amulet")
-    public float nonbeliever_mod = 0.5F;
+    @Comment("Mod of nonbeliever amulet (spell suppression chance)")
+    public float nonbeliever_mod = 0.4F;
     @Comment("Registration of defiance ring")
     public boolean defiance_ring = true;
 

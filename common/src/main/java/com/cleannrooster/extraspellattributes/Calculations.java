@@ -25,21 +25,12 @@ public class Calculations {
     public static double spellSuppress(LivingEntity player){
         return applyAttributeModifiers(1,Sign.POSITIVE.wrap(player.getAttributeInstance(SPELLSUPPRESS)));
     }
-    public static double defiance(LivingEntity player){
-        return player.getAttributeValue(DEFIANCE);
-    }
     public static double fortitude(LivingEntity player){
-        return applyAttributeModifiers(player.getMaxHealth()/5,Sign.POSITIVE.wrap(player.getAttributeInstance(FORTITUDE)));
-
+        return 1 + 0.1 * player.getAttributeValue(FORTITUDE);
     }
     public static double endurance(LivingEntity player){
         return 10/(10+(applyAttributeModifiers(5,Sign.POSITIVE.wrap(player.getAttributeInstance(ENDURANCE)))));
 
-    }
-
-    public static double spellbreak(LivingEntity player){
-
-        return applyAttributeModifiers(1,Sign.POSITIVE.wrap(player.getAttributeInstance(ACRO)));
     }
     public static double recoup(LivingEntity player){
         return applyAttributeModifiers(1,Sign.POSITIVE.wrap(player.getAttributeInstance(RECOUP)));
@@ -49,12 +40,6 @@ public class Calculations {
     }
     public  static double reabsorbarmormax(LivingEntity player){
         return player.getAttributeValue(REABSORBARMORMAX);
-    }
-    public static double imbalanced(LivingEntity player){
-        return applyAttributeModifiers(1,Sign.POSITIVE.wrap(player.getAttributeInstance(IMBALANCEDGUARD)));
-    }
-    public static double magebane(LivingEntity player){
-        return applyAttributeModifiers(1,Sign.POSITIVE.wrap(player.getAttributeInstance(MAGEBANE)));
     }
     public static double blur(LivingEntity player){
         return applyAttributeModifiers(1,Sign.POSITIVE.wrap(player.getAttributeInstance(BLUR)));

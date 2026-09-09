@@ -6,15 +6,17 @@
   "attribute.name.extraspellattributes.convertfromarcane": "Arcane Power Attribute gained as Attack Damage",
   "attribute.name.extraspellattributes.converttofrost": "Attack Damage gained as Frost Power ",
   "attribute.name.extraspellattributes.convertfromfrost": "Frost Power Attribute gained as Attack Damage",
-  "attribute.name.extraspellattributes.converttoheal": "Attack Damage gained as Healing Power ",
-  "attribute.name.extraspellattributes.glancingblow": "Chance for a hit received to be a Glancing Blow, being Mitigated by 35%",
-  "attribute.name.extraspellattributes.spellsuppression": "Chance for Spells Received to be Suppressed, dealing 50% Less Damage",
-  "attribute.name.extraspellattributes.serenity": "Chance for Suppressed Received Spells to Instead Deal No Damage (Max 75%)",
+  "attribute.name.extraspellattributes.converttoheal": "Attack Damage gained as Healing Power",
+  "attribute.name.extraspellattributes.glancingblow": "Glancing Blow Chance",
+  "attribute.name.extraspellattributes.spellsuppression": "Chance to Suppress Spells",
+  "attribute.name.extraspellattributes.serenity": "Serenity (Deprecated)",
   "attribute.name.extraspellattributes.endurance": "Endurance",
-  "attribute.name.extraspellattributes.fortitude": "Endurance Threshold",
+  "attribute.name.extraspellattributes.fortitude": "Fortitude (+10% Healing from Saturation per)",
+  "attribute.name.extraspellattributes.cull": "Threshold to Cull or Be Culled",
+  "attribute.name.extraspellattributes.brittle": "Brittle Barrier",
 
-  "attribute.name.extraspellattributes.defi": "Physical Damage Mitigation (with Diminishing Returns)",
-  "attribute.name.extraspellattributes.aureate": "Damage Absorbed by Armor Recouped as Reabsorption",
+  "attribute.name.extraspellattributes.defi": "Defiance (Deprecated)",
+  "attribute.name.extraspellattributes.aureate": "Physical Damage Mitigated Recouped as Reabsorption",
   "attribute.name.extraspellattributes.physique": "Physique",
   "attribute.name.extraspellattributes.finesse": "Finesse",
   "attribute.name.extraspellattributes.attunement": "Attunement",
@@ -22,46 +24,47 @@
   "attribute.name.extraspellattributes.inevitability": "Inevitability gained per second. +10% Spell Crit Damage per Inevitability, up to +100%.",
 
   "enchantment.extraspellattributes.suppression": "Suppressing",
-  "enchantment.extraspellattributes.defiance": "Defiance",
   "enchantment.extraspellattributes.warding": "Warding",
-  "enchantment.extraspellattributes.spellbreak": "Spellbreaking",
-  "enchantment.extraspellattributes.glancingblow": "Evasion",
+  "enchantment.extraspellattributes.glancingblow": "Glancing",
+  "enchantment.extraspellattributes.magebane": "Magebane",
+  "enchantment.extraspellattributes.imbalanced_guard": "Imbalanced Guard",
   "enchantment.extraspellattributes.battlerouse": "Battle Rouse",
   "enchantment.extraspellattributes.aureate": "Absorbing",
   "enchantment.extraspellattributes.enduring": "Enduring",
   "enchantment.extraspellattributes.fortified": "Fortified",
   "enchantment.extraspellattributes.dissolution": "Curse of Dissolution",
   "enchantment.extraspellattributes.ethereal": "Curse of the Ethereal",
-
+  "enchantment.extraspellattributes.guerilla": "Guerilla",
   "effect.extraspellattributes.dissolution": "Dissolution",
   "effect.extraspellattributes.inevitability": "Inevitability",
 
-  "enchantment.extraspellattributes.suppression.desc": "Chance to Suppress Magic Damage, halving the damage taken. Stacks.",
-  "enchantment.extraspellattributes.defiance.desc": "Mitigates a flat amount of damage; this enchantment stacks with diminishing returns.",
+  "spell.extraspellattributes.sneak_attack.name": "Sneak Attack",
+  "spell.extraspellattributes.sneak_attack.description": "Strike an enemy with a precise melee attack for 1.5x damage. If you are under the effect of a concealment effect (Invisibility, Vanish...), consume the concealment to guarantee a critical strike. If the attack also critically strikes naturally, it ignores armor.",
+
+  "enchantment.extraspellattributes.suppression.desc": "Chance to Suppress Magic Damage, halving the damage taken. Chance above 100% can Suppress the same hit again, multiplicatively. Stacks.",
   "enchantment.extraspellattributes.warding.desc": "Gives Reabsorption: recharging yellow hearts. Stacks.",
-  "enchantment.extraspellattributes.spellbreak.desc": "Chance to Avoid Suppressed spells, maximum 75% chance. Stacks.",
-  "enchantment.extraspellattributes.glancingblow.desc": "Chance for hits taken to be Glancing Blows, dealing only 65% normal damage. Glancing Blows can't come from non-entities. Stacks.",
+  "enchantment.extraspellattributes.glancingblow.desc": "Chance for hits taken to be Glancing Blows, dealing only 65% normal damage. Chance above 100% can make the same hit Glance again, multiplicatively. Glancing Blows can't come from non-entities. Stacks.",
+  "enchantment.extraspellattributes.magebane.desc": "Your armor reduces magic damage as if it were physical, but you take 20% increased damage after armor.",
+  "enchantment.extraspellattributes.imbalanced_guard.desc": "Physical hits are tripled, then reduced by your armor a second time. Strong armor turns this into mitigation; weak armor makes it a death sentence.",
   "enchantment.extraspellattributes.battlerouse.desc": "Some incoming damage is regenerated over the next four seconds. Stacks.",
-  "enchantment.extraspellattributes.aureate.desc": "Some damage absorbed by armor is regenerated as yellow hearts, up to maximum reabsorption. Gives some reabsorption. Stacks.",
-  "enchantment.extraspellattributes.enduring.desc": "Reduces damage taken past your Endurance Threshold. Stacks. Minimum Endurance Threshold is 20% of your Maximum Life.",
-  "enchantment.extraspellattributes.fortified.desc": "Increases the threshold at which your Endurance reduces damage taken an amount equal to total enchantment level. Stacks. Minimum Endurance Damage Reduction is 25%.",
+  "enchantment.extraspellattributes.aureate.desc": "Some physical damage prevented is regenerated as yellow hearts, up to maximum reabsorption. Gives some reabsorption. Stacks.",
+  "enchantment.extraspellattributes.enduring.desc": "Your Endurance reduces damage that would take you below 20% of your Maximum Life.",
+  "enchantment.extraspellattributes.fortified.desc": "+10% healing from Saturation per point.",
   "enchantment.extraspellattributes.dissolution.desc": "You gain Dissolution equal to the damage you take, lowering your Maximum Health until you take no damage for 4 seconds. You are always at maximum health while in Dissolution.",
   "enchantment.extraspellattributes.ethereal.desc": "You lose 95% of your health, but gain +5 and +100% Reabsorption.",
-
+  "enchantment.extraspellattributes.guerilla.desc": "Dealing 150% of your attack damage within 1 second gives a chance to go Invisible for 4 seconds.",
   "attribute.name.extraspellattributes.determination": "Damage Taken Recouped over 4 seconds",
 
-  "desc.extraspellattributes.glance": "A Glancing Blow deals only 65% damage. You cannot receive Glancing Blows from damage that doesn't come from an entity (Such as Fire and Poison).",
+  "desc.extraspellattributes.glance": "A Glancing Blow deals only 65% damage. Glancing Blow Chance above 100% can apply again to the same hit, multiplicatively. You cannot receive Glancing Blows from damage that doesn't come from an entity (Such as Fire and Poison).",
 
-  "desc.extraspellattributes.supp": "A Suppressed Spell deals only 50% damage.",
-
-  "desc.extraspellattributes.defi": "Your Defiance subtracts its total from the total damage you take. Defiance has diminishing returns.",
-  "desc.extraspellattributes.acro":"Your % Spellbreak is the chance that a suppressed spell instead deals no damage. Spellbreak caps at 75%.",
+  "desc.extraspellattributes.supp": "A Suppressed Spell deals only 50% damage. Suppression Chance above 100% can apply again to the same hit, multiplicatively.",
   "desc.extraspellattributes.determination":"Your % Determination is the proportion of health lost that regenerates back over the next four seconds.",
   "desc.extraspellattributes.reabsorption":"You regenerate Absorption (Yellow Hearts) up to your maximum Reabsorption gradually after not being hit for 4 seconds.",
 
   "itemGroup.extraspellattributes.general": "Extra RPG Attributes Trinkets",
   "item.extraspellattributes.netheritediamondring": "Netherite Diamond Ring",
   "item.extraspellattributes.goldquartzring": "Gold Quartz Ring",
+
   "item.extraspellattributes.netheritediamondamulet": "Netherite Diamond Amulet",
   "item.extraspellattributes.goldquartzamulet": "Gold Quartz Amulet",
   "item.extraspellattributes.martialbracer": "Turtle Bracer",
@@ -70,8 +73,4 @@
   "item.extraspellattributes.turtlegirdle": "Turtle Girdle",
   "item.extraspellattributes.defiancering": "Ring of Undying",
   "item.extraspellattributes.undyingsoul": "Banner of Undying"
-
-
-
-
 }

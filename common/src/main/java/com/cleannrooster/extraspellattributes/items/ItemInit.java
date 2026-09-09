@@ -212,7 +212,7 @@ public class ItemInit {
         )).setTier(1);
         turtlegirdle  = add(Identifier.of(MOD_ID, "turtlegirdle"), Rarity.RARE, new ItemConfig.Item(
                 List.of(
-                        new ItemConfig.AttributeModifier(DEFIANCE.getIdAsString(), 2F, EntityAttributeModifier.Operation.ADD_VALUE)
+                        new ItemConfig.AttributeModifier(FORTITUDE.getIdAsString(), 4F, EntityAttributeModifier.Operation.ADD_VALUE)
                 )
         )).setTier(1);
         undyingsoul = add(Identifier.of(MOD_ID, "undyingsoul"), Rarity.RARE, new ItemConfig.Item(
@@ -228,7 +228,7 @@ public class ItemInit {
         )).setTier(1);
         nonbelieversamulet  = add(Identifier.of(MOD_ID, "nonbelieversamulet"), Rarity.RARE, new ItemConfig.Item(
                 List.of(
-                        new ItemConfig.AttributeModifier(ACRO.getIdAsString(), 0.4F, EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE)
+                        new ItemConfig.AttributeModifier(SPELLSUPPRESS.getIdAsString(), 0.4F, EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE)
                 )
         )).setTier(1);
         martialbracer  = add(Identifier.of(MOD_ID, "martialbracer"), Rarity.UNCOMMON, new ItemConfig.Item(

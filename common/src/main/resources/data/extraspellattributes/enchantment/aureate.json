@@ -8,8 +8,8 @@
       {
         "amount": {
           "type": "minecraft:linear",
-          "base": 0.02,
-          "per_level_above_first": 0.01
+          "base": 0.005,
+          "per_level_above_first": 0.005
         },
         "attribute": "extraspellattributes:recoupabsorb",
         "id": "extraspellattributes:aureate_recoup",

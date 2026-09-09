@@ -11,12 +11,14 @@
     "EntityAttributeInstanceInvoker",
     "EntityAttributeInstanceMixin",
     "EntityAttributesMixin",
+    "HungerManagerMixin",
     "ItemstackMixin",
     "LivingEntityCullMixin",
     "LivingEntityMixin",
     "LivingEntityRecoupAbsorbMixin",
     "LivingEntityRecoupMixin",
-    "PlayerMixin"],
+    "PlayerMixin",
+    "SpellAssignmentsMixin"],
   "injectors": {
     "defaultRequire": 1
   }

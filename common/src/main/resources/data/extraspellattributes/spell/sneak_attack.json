@@ -1,0 +1,50 @@
+{
+  "school": "spell_power:physical_melee",
+  "range": 4.0,
+  "range_mechanic": "MELEE",
+  "tier": 1,
+  "learn": {},
+  "active": {
+    "cast": {
+      "duration": 0.4,
+      "animation": {
+        "id": "spell_engine:weapon_thrust_charge"
+      }
+    }
+  },
+  "release": {
+    "animation": {
+      "id": "spell_engine:weapon_thrust_full"
+    }
+  },
+  "target": {
+    "type": "AIM",
+    "aim": {
+      "sticky": true,
+      "required": true
+    }
+  },
+  "deliver": {
+    "type": "DIRECT"
+  },
+  "impacts": [
+    {
+      "action": {
+        "type": "CUSTOM",
+        "damage": {
+          "spell_power_coefficient": 1.5,
+          "knockback": 0.0
+        },
+        "custom": {
+          "handler": "extraspellattributes:sneak_attack",
+          "intent": "HARMFUL"
+        }
+      }
+    }
+  ],
+  "cost": {
+    "cooldown": {
+      "duration": 6.0
+    }
+  }
+}
