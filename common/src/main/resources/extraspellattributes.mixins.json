@@ -12,6 +12,7 @@
     "EntityAttributeInstanceMixin",
     "EntityAttributesMixin",
     "HungerManagerMixin",
+    "ItemStackArmorConversionMixin",
     "ItemstackMixin",
     "LivingEntityCullMixin",
     "LivingEntityMixin",

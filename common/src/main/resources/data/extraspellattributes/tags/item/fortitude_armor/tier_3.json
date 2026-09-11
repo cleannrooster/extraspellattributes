@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    { "id": "rogues:netherite_berserker_armor_head", "required": false },
+    { "id": "rogues:netherite_berserker_armor_chest", "required": false },
+    { "id": "rogues:netherite_berserker_armor_legs", "required": false },
+    { "id": "rogues:netherite_berserker_armor_feet", "required": false },
+    { "id": "berserker_rpg:netherite_northling_head", "required": false },
+    { "id": "berserker_rpg:netherite_northling_chest", "required": false },
+    { "id": "berserker_rpg:netherite_northling_legs", "required": false },
+    { "id": "berserker_rpg:netherite_northling_feet", "required": false },
+    { "id": "berserker_rpg:warlord_head", "required": false },
+    { "id": "berserker_rpg:warlord_chest", "required": false },
+    { "id": "berserker_rpg:warlord_legs", "required": false },
+    { "id": "berserker_rpg:warlord_feet", "required": false },
+    { "id": "armory_rpgs:destroyer_armor_head", "required": false },
+    { "id": "armory_rpgs:destroyer_armor_chest", "required": false },
+    { "id": "armory_rpgs:destroyer_armor_legs", "required": false },
+    { "id": "armory_rpgs:destroyer_armor_feet", "required": false },
+    { "id": "armory_rpgs:onslaught_armor_head", "required": false },
+    { "id": "armory_rpgs:onslaught_armor_chest", "required": false },
+    { "id": "armory_rpgs:onslaught_armor_legs", "required": false },
+    { "id": "armory_rpgs:onslaught_armor_feet", "required": false }
+  ]
+}

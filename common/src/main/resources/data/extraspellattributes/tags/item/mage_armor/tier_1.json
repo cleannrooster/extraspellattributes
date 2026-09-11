@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    { "id": "wizards:wizard_robe_head", "required": false },
+    { "id": "wizards:wizard_robe_chest", "required": false },
+    { "id": "wizards:wizard_robe_legs", "required": false },
+    { "id": "wizards:wizard_robe_feet", "required": false },
+    { "id": "bards_rpg:entertainer_garb_head", "required": false },
+    { "id": "bards_rpg:entertainer_garb_chest", "required": false },
+    { "id": "bards_rpg:entertainer_garb_legs", "required": false },
+    { "id": "bards_rpg:entertainer_garb_feet", "required": false },
+    { "id": "elemental_wizards_rpg:elemental_head", "required": false },
+    { "id": "elemental_wizards_rpg:elemental_chest", "required": false },
+    { "id": "elemental_wizards_rpg:elemental_legs", "required": false },
+    { "id": "elemental_wizards_rpg:elemental_feet", "required": false },
+    { "id": "forcemaster_rpg:oriene_head", "required": false },
+    { "id": "forcemaster_rpg:oriene_chest", "required": false },
+    { "id": "forcemaster_rpg:oriene_legs", "required": false },
+    { "id": "forcemaster_rpg:oriene_feet", "required": false },
+    { "id": "paladins:priest_robe_head", "required": false },
+    { "id": "paladins:priest_robe_chest", "required": false },
+    { "id": "paladins:priest_robe_legs", "required": false },
+    { "id": "paladins:priest_robe_feet", "required": false }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    { "id": "archers:netherite_ranger_armor_head", "required": false },
+    { "id": "archers:netherite_ranger_armor_chest", "required": false },
+    { "id": "archers:netherite_ranger_armor_legs", "required": false },
+    { "id": "archers:netherite_ranger_armor_feet", "required": false },
+    { "id": "rogues:netherite_assassin_armor_head", "required": false },
+    { "id": "rogues:netherite_assassin_armor_chest", "required": false },
+    { "id": "rogues:netherite_assassin_armor_legs", "required": false },
+    { "id": "rogues:netherite_assassin_armor_feet", "required": false },
+    { "id": "armory_rpgs:strider_armor_head", "required": false },
+    { "id": "armory_rpgs:strider_armor_chest", "required": false },
+    { "id": "armory_rpgs:strider_armor_legs", "required": false },
+    { "id": "armory_rpgs:strider_armor_feet", "required": false },
+    { "id": "armory_rpgs:riftstalker_armor_head", "required": false },
+    { "id": "armory_rpgs:riftstalker_armor_chest", "required": false },
+    { "id": "armory_rpgs:riftstalker_armor_legs", "required": false },
+    { "id": "armory_rpgs:riftstalker_armor_feet", "required": false },
+    { "id": "armory_rpgs:deathmantle_armor_head", "required": false },
+    { "id": "armory_rpgs:deathmantle_armor_chest", "required": false },
+    { "id": "armory_rpgs:deathmantle_armor_legs", "required": false },
+    { "id": "armory_rpgs:deathmantle_armor_feet", "required": false },
+    { "id": "armory_rpgs:slayer_armor_head", "required": false },
+    { "id": "armory_rpgs:slayer_armor_chest", "required": false },
+    { "id": "armory_rpgs:slayer_armor_legs", "required": false },
+    { "id": "armory_rpgs:slayer_armor_feet", "required": false }
+  ]
+}

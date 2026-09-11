@@ -50,4 +50,38 @@ public class ServerConfig  implements ConfigData {
     public float gold_absorption_necklace_mod = 0.25F;
     @Comment("Mod of netherite necklace")
     public float netherite_absorption_necklace_mod = 0.5F;
+
+    // Armor Conversion. All values below are full-SET totals, split across pieces by vanilla's own
+    // 15/40/30/15 armor weighting, so they can be reasoned about as set bonuses.
+    @Comment("Armor Conversion: grant Reabsorption, Glancing Blow or Spell Suppression to armor declared in the mage_armor, evasion_armor and antimage_armor tier tags. Turning this off leaves the tagged armor as ordinary armor; already-worn pieces keep their bonus until re-equipped")
+    public boolean armor_conversion = true;
+    @Comment("Armor Conversion: Reabsorption granted by a full set of tier 1 mage armor")
+    public float mage_armor_tier_1 = 5F;
+    @Comment("Armor Conversion: Reabsorption granted by a full set of tier 2 mage armor")
+    public float mage_armor_tier_2 = 9F;
+    @Comment("Armor Conversion: Reabsorption granted by a full set of tier 3 mage armor")
+    public float mage_armor_tier_3 = 13F;
+
+    @Comment("Armor Conversion: Glancing Blow chance granted by a full set of tier 1 evasion armor, before the armor discount")
+    public float evasion_armor_tier_1 = 0.50F;
+    @Comment("Armor Conversion: Glancing Blow chance granted by a full set of tier 2 evasion armor, before the armor discount")
+    public float evasion_armor_tier_2 = 0.75F;
+    @Comment("Armor Conversion: Glancing Blow chance granted by a full set of tier 3 evasion armor, before the armor discount. A typical 12-armor tier 3 set keeps half of this, landing near 60% of what Glancing V gives a full set")
+    public float evasion_armor_tier_3 = 1.00F;
+    @Comment("Armor Conversion: total armor points at which evasion armor grants nothing. A set is discounted linearly towards this. Netherite is 20; the default sits above it so that diamond-weight sets keep a residual share and the tier curve stays monotonic as sets gain armor")
+    public float evasion_armor_reference = 24F;
+
+    @Comment("Armor Conversion: Spell Suppression chance granted by a full set of tier 1 anti-mage armor")
+    public float antimage_armor_tier_1 = 0.25F;
+    @Comment("Armor Conversion: Spell Suppression chance granted by a full set of tier 2 anti-mage armor")
+    public float antimage_armor_tier_2 = 0.40F;
+    @Comment("Armor Conversion: Spell Suppression chance granted by a full set of tier 3 anti-mage armor")
+    public float antimage_armor_tier_3 = 0.55F;
+
+    @Comment("Armor Conversion: Fortitude granted by a full set of tier 1 fortitude armor (each point is +10% saturation healing)")
+    public float fortitude_armor_tier_1 = 5F;
+    @Comment("Armor Conversion: Fortitude granted by a full set of tier 2 fortitude armor (each point is +10% saturation healing)")
+    public float fortitude_armor_tier_2 = 10F;
+    @Comment("Armor Conversion: Fortitude granted by a full set of tier 3 fortitude armor (each point is +10% saturation healing)")
+    public float fortitude_armor_tier_3 = 15F;
 }

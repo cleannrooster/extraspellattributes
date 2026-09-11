@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    { "id": "rogues:berserker_armor_head", "required": false },
+    { "id": "rogues:berserker_armor_chest", "required": false },
+    { "id": "rogues:berserker_armor_legs", "required": false },
+    { "id": "rogues:berserker_armor_feet", "required": false },
+    { "id": "berserker_rpg:northling_head", "required": false },
+    { "id": "berserker_rpg:northling_chest", "required": false },
+    { "id": "berserker_rpg:northling_legs", "required": false },
+    { "id": "berserker_rpg:northling_feet", "required": false }
+  ]
+}
