@@ -233,7 +233,7 @@ public class ItemInit {
         )).setTier(1);
         martialbracer  = add(Identifier.of(MOD_ID, "martialbracer"), Rarity.UNCOMMON, new ItemConfig.Item(
                 List.of(
-                        new ItemConfig.AttributeModifier(GLANCINGBLOW.getIdAsString(), 0.3F, EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE)
+                        new ItemConfig.AttributeModifier(EVASION_RATING.getIdAsString(), 5F, EntityAttributeModifier.Operation.ADD_VALUE)
                 )
         )).setTier(1);
         arcane_bracer  = add(Identifier.of(MOD_ID, "arcanebracer"), Rarity.UNCOMMON, new ItemConfig.Item(

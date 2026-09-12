@@ -25,7 +25,8 @@ public class EntityAttributesMixin {
         CONVERTTOFROST = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "converttofrost"),new DynamicAttribute("attribute.name.extraspellattributes.converttofrost"));
         CONVERTTOARCANE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "converttoarcane"), new DynamicAttribute("attribute.name.extraspellattributes.converttoarcane"));
         CONVERTTOHEAL = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "converttoheal"), new DynamicAttribute("attribute.name.extraspellattributes.converttoheal"));
-        GLANCINGBLOW = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "glancingblow"), new DynamicAttribute("attribute.name.extraspellattributes.glancingblow"));
+        EVASION_RATING = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "evasion_rating"), new ClampedEntityAttribute("attribute.name.extraspellattributes.evasion_rating", 0, 0, 2048));
+        EVASION_CHANCE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "evasion_chance"), new DynamicAttribute("attribute.name.extraspellattributes.evasion_chance"));
         SPELLSUPPRESS = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID, "spellsuppression"), new DynamicAttribute(("attribute.name.extraspellattributes.spellsuppression")));
         ACRO = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"serenity"), new DynamicAttribute(("attribute.name.extraspellattributes.serenity")));
         DEFIANCE = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(MOD_ID,"defiance"),new ClampedEntityAttribute("attribute.name.extraspellattributes.defi", 0,0,999));

@@ -3,13 +3,10 @@ package com.cleannrooster.extraspellattributes.armor;
 import com.cleannrooster.extraspellattributes.DynamicAttribute;
 import com.cleannrooster.extraspellattributes.Effects;
 import com.cleannrooster.extraspellattributes.config.ServerConfig;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,11 +17,12 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
-import static com.cleannrooster.extraspellattributes.DynamicAttribute.GLANCINGBLOW;
-import static com.cleannrooster.extraspellattributes.DynamicAttribute.SPELLSUPPRESS;
+import static com.cleannrooster.extraspellattributes.DynamicAttribute.EVASION_RATING;
 import static com.cleannrooster.extraspellattributes.DynamicAttribute.WARDING;
 import static com.cleannrooster.extraspellattributes.ExampleMod.MOD_ID;
 
@@ -36,28 +34,26 @@ import static com.cleannrooster.extraspellattributes.ExampleMod.MOD_ID;
  * and modded RPG armors make inference worse. Items opt in through nested tags mirroring the
  * rpg_series:loot_tier convention: extraspellattributes:mage_armor/tier_1 and so on.
  *
- * <p>Config values are full-SET totals; each piece receives total * slotWeight, using vanilla's own
- * 15/40/30/15 split (diamond's 3/8/6/3). Balance is therefore reasoned about in set totals, and
- * mixed sets degrade sensibly.
+ * <p>Config values are full-SET totals and every slot receives an equal quarter of the total. The
+ * grant is a flat bonus: it is not scaled down by the armor points the piece already carries, and
+ * it is not weighted by slot. A tier 3 set is budgeted to roughly double effective HP under ideal
+ * conditions, whichever family it belongs to.
  */
 public final class ArmorConversion {
     private ArmorConversion() {}
 
     /** Fixed priority - first match wins, so an item in two families can never double up. */
-    public enum Family { MAGE, EVASION, ANTIMAGE, FORTITUDE }
+    public enum Family { MAGE, EVASION, FORTITUDE }
 
     public record Grant(Family family, int tier) {}
 
     private static final int MAX_TIER = 3;
 
-    /** Vanilla's armor split, 3/8/6/3 out of diamond's 20. Doubles as the netherite reference. */
-    private static final Map<EquipmentSlot, Double> SLOT_WEIGHTS = new EnumMap<>(EquipmentSlot.class);
-    static {
-        SLOT_WEIGHTS.put(EquipmentSlot.HEAD, 0.15);
-        SLOT_WEIGHTS.put(EquipmentSlot.CHEST, 0.40);
-        SLOT_WEIGHTS.put(EquipmentSlot.LEGS, 0.30);
-        SLOT_WEIGHTS.put(EquipmentSlot.FEET, 0.15);
-    }
+    /** The four armor slots, each taking an equal share of the set total. */
+    private static final Set<EquipmentSlot> ARMOR_SLOTS =
+            EnumSet.of(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET);
+
+    private static final double SLOT_SHARE = 1.0 / ARMOR_SLOTS.size();
 
     /**
      * One modifier id per slot. 1.21 keys attribute modifiers by Identifier rather than UUID, so
@@ -67,7 +63,7 @@ public final class ArmorConversion {
      */
     private static final Map<EquipmentSlot, Identifier> MODIFIER_IDS = new EnumMap<>(EquipmentSlot.class);
     static {
-        for (EquipmentSlot slot : SLOT_WEIGHTS.keySet()) {
+        for (EquipmentSlot slot : ARMOR_SLOTS) {
             MODIFIER_IDS.put(slot, Identifier.of(MOD_ID, "armor_conversion." + slot.getName()));
         }
     }
@@ -76,7 +72,6 @@ public final class ArmorConversion {
     static {
         TIER_TAGS.put(Family.MAGE, tierTags("mage_armor"));
         TIER_TAGS.put(Family.EVASION, tierTags("evasion_armor"));
-        TIER_TAGS.put(Family.ANTIMAGE, tierTags("antimage_armor"));
         TIER_TAGS.put(Family.FORTITUDE, tierTags("fortitude_armor"));
     }
 
@@ -117,8 +112,7 @@ public final class ArmorConversion {
             EquipmentSlot slot,
             BiConsumer<RegistryEntry<EntityAttribute>, EntityAttributeModifier> consumer
     ) {
-        Double weight = SLOT_WEIGHTS.get(slot);
-        if (weight == null) {
+        if (!ARMOR_SLOTS.contains(slot)) {
             return;
         }
         // Checked before resolve() so a disabled feature costs nothing but the slot lookup, rather
@@ -136,26 +130,9 @@ public final class ArmorConversion {
         if (setTotal <= 0) {
             return;
         }
-        double amount = setTotal * weight;
 
-        // Evasion is the payment for being lightly armored, so discount it by the armor the piece
-        // already carries. Linear to zero at the netherite reference: reference * weight is exactly
-        // netherite's own per-piece armor (3/8/6/3). Summed over an unclamped set this comes to
-        // total * (1 - setArmor / reference), so set-total reasoning survives the per-piece split.
-        if (grant.family() == Family.EVASION) {
-            double reference = config.evasion_armor_reference * weight;
-            if (reference <= 0) {
-                return;
-            }
-            amount *= Math.max(0.0, 1.0 - baseArmor(stack, slot) / reference);
-        }
-
-        if (amount <= 0) {
-            return;
-        }
-
-        EntityAttributeModifier modifier =
-                new EntityAttributeModifier(MODIFIER_IDS.get(slot), amount, operation(grant.family()));
+        EntityAttributeModifier modifier = new EntityAttributeModifier(
+                MODIFIER_IDS.get(slot), setTotal * SLOT_SHARE, EntityAttributeModifier.Operation.ADD_VALUE);
         consumer.accept(attribute(grant.family()), modifier);
     }
 
@@ -183,11 +160,6 @@ public final class ArmorConversion {
                 case 2 -> config.evasion_armor_tier_2;
                 default -> config.evasion_armor_tier_3;
             };
-            case ANTIMAGE -> switch (grant.tier()) {
-                case 1 -> config.antimage_armor_tier_1;
-                case 2 -> config.antimage_armor_tier_2;
-                default -> config.antimage_armor_tier_3;
-            };
             case FORTITUDE -> switch (grant.tier()) {
                 case 1 -> config.fortitude_armor_tier_1;
                 case 2 -> config.fortitude_armor_tier_2;
@@ -199,26 +171,8 @@ public final class ArmorConversion {
     private static RegistryEntry<EntityAttribute> attribute(Family family) {
         return switch (family) {
             case MAGE -> WARDING;
-            case EVASION -> GLANCINGBLOW;
-            case ANTIMAGE -> SPELLSUPPRESS;
+            case EVASION -> EVASION_RATING;
             case FORTITUDE -> DynamicAttribute.FORTITUDE;
-        };
-    }
-
-    /**
-     * Reabsorption and Fortitude are flat point pools, matching the warding enchantment and the
-     * turtle girdle; glancing and suppression are chances, matching their enchantments.
-     *
-     * <p>For the two dynamic attributes the operations are numerically identical - they start from
-     * 1 and read raw modifiers - and differ only in rendering, flat against percent. For Fortitude
-     * the choice is load-bearing, not cosmetic: it is a clamped attribute read through
-     * getAttributeValue with a base of 0, so ADD_MULTIPLIED_BASE would scale that zero and grant
-     * nothing at all.
-     */
-    private static EntityAttributeModifier.Operation operation(Family family) {
-        return switch (family) {
-            case MAGE, FORTITUDE -> EntityAttributeModifier.Operation.ADD_VALUE;
-            case EVASION, ANTIMAGE -> EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE;
         };
     }
 
@@ -226,30 +180,5 @@ public final class ArmorConversion {
     private static EquipmentSlot slotOf(ItemStack stack) {
         Equipment equipment = Equipment.fromStack(stack);
         return equipment == null ? null : equipment.getSlotType();
-    }
-
-    /**
-     * The armor points the piece itself declares. Read straight off the component rather than
-     * through ItemStack#applyAttributeModifiers, which would recurse back into this class and would
-     * also count armor granted by enchantments.
-     */
-    // The empty-component fallback mirrors ItemStack#applyAttributeModifiers exactly. Item's getter
-    // is deprecated in favour of the component, but dropping the fallback would silently zero the
-    // evasion discount for any item that supplies its modifiers by override rather than by setting.
-    @SuppressWarnings("deprecation")
-    private static double baseArmor(ItemStack stack, EquipmentSlot slot) {
-        AttributeModifiersComponent component =
-                stack.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT);
-        if (component.modifiers().isEmpty()) {
-            component = stack.getItem().getAttributeModifiers();
-        }
-        double[] armor = {0};
-        component.applyModifiers(slot, (attribute, modifier) -> {
-            if (attribute.value() == EntityAttributes.GENERIC_ARMOR.value()
-                    && modifier.operation() == EntityAttributeModifier.Operation.ADD_VALUE) {
-                armor[0] += modifier.value();
-            }
-        });
-        return armor[0];
     }
 }

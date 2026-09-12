@@ -86,8 +86,8 @@ public class LivingEntityMixin {
 
 				}
 			}
-			if (living.getAttributeInstance(GLANCINGBLOW) != null && source.getAttacker() != null) {
-				amount *= (float) Math.pow(0.65, esa$overflowProcs(living, Calculations.glancingBlow(living) - 1));
+			if (living.getAttributeInstance(EVASION_RATING) != null && source.getAttacker() != null) {
+				amount *= (float) Math.pow(0.65, esa$overflowProcs(living, Calculations.evasionProcs(living)));
 			}
 
 			if (living.getAttributeInstance(SPELLSUPPRESS) != null &&  source.getTypeRegistryEntry().isIn(TagKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of("c", "is_magic")))) {
@@ -109,14 +109,14 @@ public class LivingEntityMixin {
 		return amount;
 	}
 
-	/** PoE2-style overflow: floor(chance) guaranteed procs, fractional part rolls for one more. */
+	/** PoE2-style overflow: floor(procs) guaranteed procs, fractional part rolls for one more. */
 	@Unique
-	private static int esa$overflowProcs(LivingEntity living, double chance) {
-		if (chance <= 0) {
+	private static int esa$overflowProcs(LivingEntity living, double expected) {
+		if (expected <= 0) {
 			return 0;
 		}
-		int procs = (int) chance;
-		if (living.getRandom().nextFloat() < chance - procs) {
+		int procs = (int) expected;
+		if (living.getRandom().nextFloat() < expected - procs) {
 			procs++;
 		}
 		return procs;
@@ -271,7 +271,8 @@ public class LivingEntityMixin {
 		info.getReturnValue().add(CONVERTTOFROST);
 		info.getReturnValue().add(CONVERTTOARCANE);
 		info.getReturnValue().add(CONVERTTOHEAL);
-		info.getReturnValue().add(GLANCINGBLOW);
+		info.getReturnValue().add(EVASION_RATING);
+		info.getReturnValue().add(EVASION_CHANCE);
 		info.getReturnValue().add(SPELLSUPPRESS);
 		info.getReturnValue().add(ACRO);
 		info.getReturnValue().add(DEFIANCE);

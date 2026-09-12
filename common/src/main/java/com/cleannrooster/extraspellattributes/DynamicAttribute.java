@@ -20,7 +20,8 @@ public class DynamicAttribute extends EntityAttribute {
     public static RegistryEntry<EntityAttribute> CONVERTTOFROST ;
     public static RegistryEntry<EntityAttribute> CONVERTTOARCANE ;
     public static RegistryEntry<EntityAttribute> CONVERTTOHEAL ;
-    public static RegistryEntry<EntityAttribute> GLANCINGBLOW;
+    public static RegistryEntry<EntityAttribute> EVASION_RATING;
+    public static RegistryEntry<EntityAttribute> EVASION_CHANCE;
     public static RegistryEntry<EntityAttribute> SPELLSUPPRESS;
     public static RegistryEntry<EntityAttribute> ACRO;
     public static RegistryEntry<EntityAttribute> DEFIANCE ;

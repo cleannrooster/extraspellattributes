@@ -8,6 +8,10 @@
     { "id": "berserker_rpg:northling_head", "required": false },
     { "id": "berserker_rpg:northling_chest", "required": false },
     { "id": "berserker_rpg:northling_legs", "required": false },
-    { "id": "berserker_rpg:northling_feet", "required": false }
+    { "id": "berserker_rpg:northling_feet", "required": false },
+    { "id": "paladins:crusader_armor_head", "required": false },
+    { "id": "paladins:crusader_armor_chest", "required": false },
+    { "id": "paladins:crusader_armor_legs", "required": false },
+    { "id": "paladins:crusader_armor_feet", "required": false }
   ]
 }
